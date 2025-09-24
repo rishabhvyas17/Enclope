@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Environment Variables (Secrets!)
+.env
+server/.env
+client/.env
+
+# Vite build files
+client/dist
+.vite/
