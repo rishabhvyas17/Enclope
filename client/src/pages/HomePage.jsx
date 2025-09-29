@@ -1,25 +1,40 @@
+import { useEffect } from 'react';
+import Lenis from '@studio-freight/lenis';
+
+// --- SHARED COMPONENTS ---
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Hero from '../sections/Hero';
 import SectionPreview from '../components/SectionPreview';
+
+// --- HOMEPAGE SECTIONS ---
+import Hero from '../sections/Hero';
 import FoundryPulse from '../sections/FoundryPulse';
 import ValueProposition from '../sections/ValueProposition';
-import Forge from '../sections/TheForge';
-import Showroom from '../sections/Showroom';
 import EnterFoundry from '../sections/EnterFoundry';
-import Crucible from '../sections/Crucible';
 import StarterKit from '../sections/StarterKit';
+import Crucible from '../sections/Crucible';
 
 export default function HomePage() {
+  // Effect for cinematic smooth scrolling
+  useEffect(() => {
+    const lenis = new Lenis();
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  }, []);
+
   return (
     <>
       <Header />
       <main>
+        {/* The new, innovative 3D hero is the first thing users see */}
         <Hero />
+        
+        {/* All the other sections follow in a logical, scrolling order */}
         <FoundryPulse />
         <ValueProposition />
-
-        {/* --- TEASER FOR THE FORGE --- */}
         <SectionPreview
           subtitle="Our Services"
           title="The Forge"
@@ -27,21 +42,19 @@ export default function HomePage() {
           imageUrl="https://placehold.co/800x600/0A0A0A/EAEAEA?text=Services"
           linkTo="/forge"
         />
-
-        {/* --- TEASER FOR THE SHOWROOM --- */}
         <SectionPreview
           subtitle="Our Work"
           title="The Showroom"
           description="We don't just talk about quality, we deliver it. Explore our gallery of finished projects and see the impact of our student-led teams."
           imageUrl="https://placehold.co/800x600/0A0A0A/EAEAEA?text=Portfolio"
           linkTo="/showroom"
-          reverse={true} // This will flip the layout for visual variety
+          reverse={true}
         />
-
         <EnterFoundry />
         <StarterKit />
-        {/* We can decide later if Crucible needs its own preview or stays on the homepage */}
+        <Crucible />
       </main>
+      {/* <Footer /> */}
     </>
   );
 }
