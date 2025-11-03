@@ -26,31 +26,31 @@ export const services = [
 ];
 export const projects = [
     {
-        img: 'https://placehold.co/800x600/0A0A0A/EAEAEA?text=MEGA+Dashboard',
+        img: '/mega.png',
         title: 'MEGA Enterprises Business Operations Dashboard',
         desc: 'Transforming Industrial B2B Operations Through Intelligent Automation. A comprehensive mobile-first platform that automates quotation generation, implements WhatsApp-based payment reminders, and provides real-time task management—reducing quotation creation time by 70%.',
         tech: 'MERN Stack, WhatsApp API'
     },
     {
-        img: 'https://placehold.co/800x600/0A0A0A/EAEAEA?text=Quizzie',
+        img: '/quizzie.png',
         title: 'Quizzie',
         desc: 'Transforming traditional assessments into intelligent, engaging learning experiences through AI-powered quiz generation. Automatically generates contextual questions from course materials, featuring real-time rankings and gamified assessments that reduce quiz preparation time by 80%.',
         tech: 'Node.js, Express, MongoDB, Google Gemini AI, Socket.io'
     },
     {
-        img: 'https://placehold.co/800x600/0A0A0A/EAEAEA?text=EduGuide+AI',
+        img: '/Eduguide.png',
         title: 'EduGuide AI',
         desc: 'Transforming student evaluation from marks-driven to holistic, AI-powered career guidance. Combines academic tracking, monthly AI-driven aptitude tests, and counselor-led interviews to provide dynamic, personalized career guidance for K-12 students aligned with NEP 2020.',
         tech: 'MERN Stack, Tailwind CSS, AI Integration'
     },
     {
-        img: 'https://placehold.co/800x600/0A0A0A/EAEAEA?text=Sage+Utility',
+        img: '/sageUtility.png',
         title: 'Sage Utility',
         desc: 'Streamlining campus life through unified academic resources and community engagement. Consolidates fragmented academic materials, enables lab manual print orders, and features an admin-moderated community directory—designed for 500+ students.',
         tech: 'React, Node.js/Express, PostgreSQL'
     },
     {
-        img: 'https://placehold.co/800x600/0A0A0A/EAEAEA?text=remindME',
+        img: '/remindme.png',
         title: 'remindME',
         desc: 'Your AI-powered memory assistant that turns conversations into actionable insights. Automatically analyzes uploads, categorizes content, and surfaces relevant information exactly when needed—eliminating the mental burden of remembering everything.',
         tech: 'React.js, Node.js/Express, MongoDB, Google Gemini API, AWS S3'

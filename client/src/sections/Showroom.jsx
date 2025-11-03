@@ -21,7 +21,9 @@ export default function Showroom({ limit, showTitle = true, showViewAllButton = 
               <img
                 src={project.img}
                 alt={project.title}
-                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
+                className={`w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ${
+                  project.title === 'Quizzie' ? 'scale-125' : ''
+                }`}
               />
             </div>
             <h3 className="text-3xl mb-2 text-text-primary">{project.title}</h3>
