@@ -26,9 +26,9 @@ function AnimatedCounter({ to }) {
 
 // The metrics from your creative brief
 const metrics = [
-  { value: 47, label: 'Active Contributors' },
-  { value: 12403, label: 'Lines of Code Today' },
-  { value: 15, label: 'Ideas in The Crucible' },
+  { value: 5, label: 'Active Contributors' },
+  { value: 654, label: 'Lines of Code Today' },
+  { value: 9, label: 'Ideas in The Crucible' },
   { value: 8, label: 'Projects in The Forge' },
 ];
 

@@ -18,14 +18,17 @@ export default function Showroom({ limit, showTitle = true, showViewAllButton = 
         {displayProjects.map((project, index) => (
           <div key={index} className="group cursor-pointer">
             <div className="overflow-hidden rounded-xl mb-6 border border-border">
-              <img 
-                src={project.img} 
-                alt={project.title} 
+              <img
+                src={project.img}
+                alt={project.title}
                 className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
             <h3 className="text-3xl mb-2 text-text-primary">{project.title}</h3>
-            <p className="text-text-secondary">{project.desc}</p>
+            <p className="text-text-secondary mb-3">{project.desc}</p>
+            {project.tech && (
+              <p className="text-sm text-electric-cyan font-medium">Tech: {project.tech}</p>
+            )}
           </div>
         ))}
       </div>

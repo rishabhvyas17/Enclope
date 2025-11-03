@@ -7,6 +7,13 @@ export default function Footer() {
         <div>
           <h3 className="text-2xl font-heading text-text-primary">Enclope</h3>
           <p className="text-sm text-text-secondary mt-2">Forging the future of digital products.</p>
+          <div className="text-sm text-text-secondary mt-4 space-y-1">
+            <p>Phone: 7415618704</p>
+            <p>Email: krishna191105@gmail.com</p>
+            <p>
+              LinkedIn: <a href="https://www.linkedin.com/in/krishna-soni-834284304/" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary transition-colors underline">Krishna Soni</a>
+            </p>
+          </div>
         </div>
         <div className="flex gap-8 mt-8 md:mt-0">
           <Link to="/forge" className="hover:text-text-primary transition-colors">Services</Link>
