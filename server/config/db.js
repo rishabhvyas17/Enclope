@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // The connection string. 'enclope' is the name of our database.
-    const conn = await mongoose.connect('mongodb://localhost:27017/enclope');
-    
+    // Use environment variable for MongoDB connection string
+    // Falls back to localhost for local development
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/enclope';
+    const conn = await mongoose.connect(mongoURI);
+
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
