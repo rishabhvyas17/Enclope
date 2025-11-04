@@ -118,7 +118,7 @@ export default function JoinPage() {
               <h3 className="text-2xl mb-6">Step 3: Your Goals</h3>
               <textarea
                 name="goal"
-                placeholder="What do you hope to achieve by joining Enclope?"
+                placeholder="What do you hope to achieve by joining Enclop?"
                 value={formData.goal}
                 onChange={handleChange}
                 className="w-full bg-surface p-4 rounded-lg border-2 border-border text-text-primary focus:bg-base focus:border-electric-cyan focus:outline-none transition-all duration-200 placeholder:text-text-secondary/50 h-32 resize-none"

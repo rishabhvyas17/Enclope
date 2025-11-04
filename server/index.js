@@ -9,7 +9,7 @@ connectDB();
 const PORT = process.env.PORT || 5100;
 
 app.get('/',(req,res) =>{
-    res.send('Welcome to our website - Enclope!!');
+    res.send('Welcome to our website - Enclop!!');
 });
 
 app.use(cors());

@@ -5,7 +5,7 @@ const connectDB = async () => {
   try {
     // Use environment variable for MongoDB connection string
     // Falls back to localhost for local development
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/enclope';
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/enclop';
     const conn = await mongoose.connect(mongoURI);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);

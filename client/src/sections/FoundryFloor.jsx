@@ -12,7 +12,7 @@ export default function FoundryFloor() {
             Raw Potential, Forged.
           </h1>
           <p className="max-w-2xl mx-auto text-base md:text-lg mb-10">
-            Welcome to the Enclope Foundry. We shape the next generation of builders by creating exceptional digital solutions.
+            Welcome to the Enclop Foundry. We shape the next generation of builders by creating exceptional digital solutions.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
             <button className="btn-primary text-base px-8 py-3 rounded-full">Start Building</button>

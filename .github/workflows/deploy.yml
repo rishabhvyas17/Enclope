@@ -29,7 +29,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy enclope-backend \
+          gcloud run deploy enclop-backend \
             --source ./server \
             --platform managed \
             --region ${{ env.REGION }} \
@@ -57,7 +57,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy enclope-frontend \
+          gcloud run deploy enclop-frontend \
             --source ./client \
             --platform managed \
             --region ${{ env.REGION }} \
@@ -68,7 +68,7 @@ jobs:
 
       - name: Get service URL
         run: |
-          FRONTEND_URL=$(gcloud run services describe enclope-frontend \
+          FRONTEND_URL=$(gcloud run services describe enclop-frontend \
             --region=${{ env.REGION }} \
             --format="value(status.url)")
           echo "Frontend URL: $FRONTEND_URL"

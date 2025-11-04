@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Enclope Deployment Script for Google Cloud Run
+# Enclop Deployment Script for Google Cloud Run
 # This script deploys both backend and frontend to Google Cloud Run
 
 set -e  # Exit on error
@@ -11,7 +11,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}=== Enclope Deployment Script ===${NC}\n"
+echo -e "${GREEN}=== Enclop Deployment Script ===${NC}\n"
 
 # Configuration - UPDATE THESE VALUES
 PROJECT_ID="${GCLOUD_PROJECT_ID:-}"
@@ -53,13 +53,13 @@ deploy_backend() {
     # Prompt for MongoDB URI if not set
     if [ -z "$MONGODB_URI" ]; then
         echo -e "${YELLOW}Enter your MongoDB Atlas connection string:${NC}"
-        echo -e "${YELLOW}(Format: mongodb+srv://username:password@cluster.mongodb.net/enclope)${NC}"
+        echo -e "${YELLOW}(Format: mongodb+srv://username:password@cluster.mongodb.net/enclop)${NC}"
         read -r MONGODB_URI
     fi
 
     cd server
 
-    gcloud run deploy enclope-backend \
+    gcloud run deploy enclop-backend \
         --source . \
         --platform managed \
         --region "$REGION" \
@@ -69,7 +69,7 @@ deploy_backend() {
         --memory 512Mi \
         --cpu 1
 
-    BACKEND_URL=$(gcloud run services describe enclope-backend --region="$REGION" --format="value(status.url)")
+    BACKEND_URL=$(gcloud run services describe enclop-backend --region="$REGION" --format="value(status.url)")
     echo -e "\n${GREEN}Backend deployed successfully!${NC}"
     echo -e "${GREEN}Backend URL: $BACKEND_URL${NC}"
     cd ..
@@ -79,7 +79,7 @@ deploy_frontend() {
     echo -e "\n${GREEN}=== Deploying Frontend ===${NC}"
     cd client
 
-    gcloud run deploy enclope-frontend \
+    gcloud run deploy enclop-frontend \
         --source . \
         --platform managed \
         --region "$REGION" \
@@ -89,7 +89,7 @@ deploy_frontend() {
         --memory 512Mi \
         --cpu 1
 
-    FRONTEND_URL=$(gcloud run services describe enclope-frontend --region="$REGION" --format="value(status.url)")
+    FRONTEND_URL=$(gcloud run services describe enclop-frontend --region="$REGION" --format="value(status.url)")
     echo -e "\n${GREEN}Frontend deployed successfully!${NC}"
     echo -e "${GREEN}Frontend URL: $FRONTEND_URL${NC}"
     cd ..
@@ -119,7 +119,7 @@ echo -e "Your services are now live:"
 [ -n "$FRONTEND_URL" ] && echo -e "Frontend: ${GREEN}$FRONTEND_URL${NC}"
 
 echo -e "\n${YELLOW}To view logs:${NC}"
-[ -n "$BACKEND_URL" ] && echo "Backend:  gcloud run logs read enclope-backend --region $REGION"
-[ -n "$FRONTEND_URL" ] && echo "Frontend: gcloud run logs read enclope-frontend --region $REGION"
+[ -n "$BACKEND_URL" ] && echo "Backend:  gcloud run logs read enclop-backend --region $REGION"
+[ -n "$FRONTEND_URL" ] && echo "Frontend: gcloud run logs read enclop-frontend --region $REGION"
 
 echo -e "\n${GREEN}Done!${NC}"

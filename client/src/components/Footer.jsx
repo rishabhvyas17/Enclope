@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="container mx-auto px-6 py-8 mt-20 border-t border-border">
       <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
         <div>
-          <h3 className="text-2xl font-heading text-text-primary">Enclope</h3>
+          <h3 className="text-2xl font-heading text-text-primary">Enclop</h3>
           <p className="text-sm text-text-secondary mt-2">Forging the future of digital products.</p>
           <div className="text-sm text-text-secondary mt-4 space-y-1">
             <p>Phone: 7415618704</p>
@@ -22,7 +22,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="text-center text-xs text-text-secondary mt-8 pt-8 border-t border-border">
-        &copy; {new Date().getFullYear()} Enclope. All Rights Reserved.
+        &copy; {new Date().getFullYear()} Enclop. All Rights Reserved.
       </div>
     </footer>
   );

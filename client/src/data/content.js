@@ -69,12 +69,12 @@ export const builders = [
     name: 'Aisha Sharma',
     role: 'Lead React Developer',
     avatar: 'https://placehold.co/100x100/0A0A0A/EAEAEA',
-    quote: 'I learned more in three months at Enclope than in two years of classes. Working on a real-world SaaS product was a complete game-changer for my resume.'
+    quote: 'I learned more in three months at Enclop than in two years of classes. Working on a real-world SaaS product was a complete game-changer for my resume.'
   },
   {
     name: 'Ben Carter',
     role: 'UI/UX Designer',
     avatar: 'https://placehold.co/100x100/0A0A0A/EAEAEA',
-    quote: 'Enclope gave me the creative freedom to design an entire mobile app interface. The mentorship was incredible and it directly led to my first internship offer.'
+    quote: 'Enclop gave me the creative freedom to design an entire mobile app interface. The mentorship was incredible and it directly led to my first internship offer.'
   }
 ];

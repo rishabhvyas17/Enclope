@@ -23,8 +23,8 @@ export default function StarterKit() {
         </div>
         <div>
           <img 
-            src="https://placehold.co/600x400/141414/262626?text=Enclope+Goodies" 
-            alt="Enclope Starter Kit" 
+            src="https://placehold.co/600x400/141414/262626?text=Enclop+Goodies" 
+            alt="Enclop Starter Kit" 
             className="rounded-lg shadow-2xl" 
           />
         </div>
