@@ -70,29 +70,6 @@ h1.hero-title {
     text-shadow: 0px 4px 20px rgba(255, 255, 255, 0.1);
 }
 
-/* --- BACKGROUND GRID (The Blueprint) --- */
-.blueprint-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 110vh;
-    z-index: -1;
-    background-color: var(--color-base);
-    /* Radial Gradient mimics a spotlight in the center */
-    background-image: 
-        radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 1) 0%, rgba(5, 5, 5, 1) 100%),
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 100% 100%, 60px 60px, 60px 60px;
-    /* THE FADE EFFECT */
-    /* Starts transparent at the top (0%) and becomes solid black at 15% down */
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 5%);
-    
-    /* Ensure it doesn't block clicks */
-    pointer-events: none;
-}
 
 
 /* --- UI COMPONENT: "DARK GLASS" CARDS --- */
@@ -197,45 +174,4 @@ h1.hero-title {
     opacity: 1;
     filter: blur(0);
     transform: translateY(0);
-}
-.content-grid-bg {
-    position: relative;
-    
-    /* 1. FORCE FULL WIDTH: This makes the grid span edge-to-edge
-       even though it's inside a container with padding. */
-    width: 100vw;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    
-    /* 2. Fix Internal Padding: Since we broke out of the container, 
-       we need to add padding back so your content stays centered. 
-       (Adjust '24px' if your site padding is different) */
-    padding-left: 24px;
-    padding-right: 13px;
-}
-
-/* 3. FOOTER COVERAGE: Use ::before to extend the background downwards */
-.content-grid-bg::before {
-    content: '';
-    position: absolute;
-    top: -100px;
-    left: 0;
-    width: 100%;
-    /* Adds 500px extra height to the bottom to cover the footer area */
-    height: calc(100% + 500px); 
-    z-index: -1;
-    pointer-events: none;
-    
-    /* 4. BRIGHTNESS: Increased opacity to 0.2 for better visibility */
-    background-image: 
-        linear-gradient(rgba(136, 146, 176, 0.2) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(136, 146, 176, 0.2) 1px, transparent 1px);
-    background-size: 50px 50px;
-    background-color: var(--color-base); /* Ensures it matches your theme */
-
-    /* Optional: Smooth fade from the top */
-    mask-image: linear-gradient(to bottom, transparent 0%, black 3%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 3%);
 }
