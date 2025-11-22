@@ -1,12 +1,8 @@
 import { useEffect } from 'react';
 import Lenis from '@studio-freight/lenis';
 
-// --- SHARED COMPONENTS ---
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+// --- COMPONENTS ---
 import SectionPreview from '../components/SectionPreview';
-
-// --- HOMEPAGE SECTIONS ---
 import Hero from '../sections/Hero';
 import FoundryPulse from '../sections/FoundryPulse';
 import ValueProposition from '../sections/ValueProposition';
@@ -15,7 +11,6 @@ import StarterKit from '../sections/StarterKit';
 import Crucible from '../sections/Crucible';
 
 export default function HomePage() {
-  // Effect for cinematic smooth scrolling
   useEffect(() => {
     const lenis = new Lenis();
     function raf(time) {
@@ -27,14 +22,16 @@ export default function HomePage() {
 
   return (
     <>
-      <Header />
-      <main>
-        {/* The new, innovative 3D hero is the first thing users see */}
-        <Hero />
+      <Hero />
+      
+      {/* Wrapper for content */}
+      <div className="content-grid-bg">
         
-        {/* All the other sections follow in a logical, scrolling order */}
+      
+
         <FoundryPulse />
         <ValueProposition />
+        
         <SectionPreview
           subtitle="Our Services"
           title="The Forge"
@@ -42,6 +39,7 @@ export default function HomePage() {
           imageUrl="https://placehold.co/800x600/0A0A0A/EAEAEA?text=Services"
           linkTo="/forge"
         />
+        
         <SectionPreview
           subtitle="Our Work"
           title="The Showroom"
@@ -50,11 +48,12 @@ export default function HomePage() {
           linkTo="/showroom"
           reverse={true}
         />
+        
         <EnterFoundry />
         <StarterKit />
         <Crucible />
-      </main>
-      {/* <Footer /> */}
+        
+      </div>
     </>
   );
 }

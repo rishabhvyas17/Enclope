@@ -16,13 +16,13 @@ function Core() {
 
   return (
     <mesh ref={meshRef}>
-      <icosahedronGeometry args={[1.8, 5]} />
+      <icosahedronGeometry args={[2.3, 5]} />
       <meshStandardMaterial 
-        color="#EAEAEA"
+        color="#eaeaeaff"
         metalness={0.9}
-        roughness={0.1}
+        roughness={0.2}
         wireframe={true}
-        wireframeLinewidth={2}
+        wireframeLinewidth={15}
       />
     </mesh>
   );
@@ -48,7 +48,7 @@ function AnimatedText() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.8, ease: 'easeInOut' }}
-                className="text-5xl md:text-7xl lg:text-8xl text-text-primary text-center"
+                className="hero-title text-5xl md:text-7xl lg:text-8xl text-center"
             >
                 {Slogans[index]}
             </motion.h1>
@@ -83,6 +83,8 @@ export default function Hero() {
           Enclope is where ambitious student talent meets real-world projects.
         </motion.p>
       </div>
+
+      
     </section>
   );
 }

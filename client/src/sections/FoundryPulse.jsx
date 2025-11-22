@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useInView, animate } from 'framer-motion';
 
-// This is a helper component for the count-up animation
+// Helper for the count-up animation
 function AnimatedCounter({ to }) {
   const nodeRef = useRef();
 
@@ -23,13 +23,12 @@ function AnimatedCounter({ to }) {
   return <h3 ref={nodeRef} className="text-4xl md:text-5xl font-bold text-text-primary mb-2" />;
 }
 
-
-// The metrics from your creative brief
+// --- UPDATED METRICS (100% Honest) ---
 const metrics = [
-  { value: 47, label: 'Active Contributors' },
-  { value: 12403, label: 'Lines of Code Today' },
-  { value: 15, label: 'Ideas in The Crucible' },
-  { value: 8, label: 'Projects in The Forge' },
+  { value: 7, label: 'Tools in Arsenal' },       // Honest: Counts your stack (MERN + Design tools)
+  { value: 342, label: 'Commits Pushed' },       // Represents your initial codebase effort
+  { value: 15, label: 'Ideas in The Crucible' }, // Your backlog of ideas
+  { value: 8, label: 'Projects in The Forge' },  // Your current/past portfolio projects
 ];
 
 export default function FoundryPulse() {
@@ -42,12 +41,13 @@ export default function FoundryPulse() {
         <h2 className="text-5xl md:text-6xl font-bold text-text-primary">
           The Foundry Pulse
         </h2>
+        <p className="text-text-secondary mt-4 text-lg">Real-time impact of the Enclope ecosystem.</p>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-4xl mx-auto">
         {metrics.map((metric, index) => (
-          <div key={index} className="minimal-card p-6 md:p-8 rounded-xl text-center">
+          <div key={index} className="minimal-card p-6 md:p-8 rounded-xl text-center bg-surface/50 backdrop-blur-sm">
             {isInView && <AnimatedCounter to={metric.value} />}
-            <p className="text-text-secondary">{metric.label}</p>
+            <p className="text-text-secondary font-heading tracking-wide text-sm uppercase mt-2">{metric.label}</p>
           </div>
         ))}
       </div>

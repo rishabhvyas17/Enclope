@@ -9,7 +9,7 @@ import JoinPage from './pages/JoinPage';
 
 export default function App() {
   return (
-    <>
+    <div className="relative min-h-screen w-full bg-base">
       <div className="blueprint-bg"></div>
       <Header />
       <main className="container mx-auto px-6 pt-32">
@@ -22,6 +22,6 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
