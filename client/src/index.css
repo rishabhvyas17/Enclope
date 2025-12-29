@@ -4,25 +4,35 @@
 
 :root {
     /* --- THEME: OBSIDIAN FOUNDRY --- */
-    
+
     /* 1. Backgrounds: Not just one black, but layers of depth */
-    --color-base: #050505;        /* The Void (Deepest Black) */
-    --color-surface: #0A0A0A;     /* Cards (Slightly elevated) */
-    --color-surface-hover: #121212; 
-    
+    --color-base: #050505;
+    /* The Void (Deepest Black) */
+    --color-surface: #0A0A0A;
+    /* Cards (Slightly elevated) */
+    --color-surface-hover: #121212;
+
     /* 2. Borders: Subtle and refined */
-    --color-border: #1F1F1F;      /* Dark grey, barely visible */
-    --color-border-highlight: #333333; /* For hover states */
+    --color-border: #1F1F1F;
+    /* Dark grey, barely visible */
+    --color-border-highlight: #333333;
+    /* For hover states */
 
     /* 3. Text: PLEASANT Contrast (No pure white) */
-    --color-text-primary: #E2E8F0;   /* Silver (High readability, low strain) */
-    --color-text-secondary: #94A3B8; /* Ash Grey (For descriptions) */
-    --color-text-muted: #525252;     /* Dark Grey (For subtle details) */
+    --color-text-primary: #E2E8F0;
+    /* Silver (High readability, low strain) */
+    --color-text-secondary: #94A3B8;
+    /* Ash Grey (For descriptions) */
+    --color-text-muted: #525252;
+    /* Dark Grey (For subtle details) */
 
     /* 4. Creativity: The "Heat" of the Foundry */
-    --color-accent: #FF5F1F;         /* Molten Orange (The spark) */
-    --color-accent-dim: rgba(255, 95, 31, 0.1); /* For backgrounds */
-    --color-glow: rgba(255, 95, 31, 0.4);       /* For nice shadows */
+    --color-accent: #FF5F1F;
+    /* Molten Orange (The spark) */
+    --color-accent-dim: rgba(255, 95, 31, 0.1);
+    /* For backgrounds */
+    --color-glow: rgba(255, 95, 31, 0.4);
+    /* For nice shadows */
 
     /* Fonts */
     --font-body: 'Sora', sans-serif;
@@ -50,12 +60,16 @@ body::before {
     height: 100%;
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.03; /* Very subtle noise */
+    opacity: 0.03;
+    /* Very subtle noise */
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 /* --- TYPOGRAPHY CREATIVITY --- */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
     font-family: var(--font-heading);
     color: var(--color-text-primary);
     font-weight: 400;
@@ -74,11 +88,14 @@ h1.hero-title {
 
 /* --- UI COMPONENT: "DARK GLASS" CARDS --- */
 .minimal-card {
-    background: rgba(20, 20, 20, 0.6); /* Semi-transparent */
-    backdrop-filter: blur(12px);       /* The frosted glass effect */
+    background: rgba(20, 20, 20, 0.6);
+    /* Semi-transparent */
+    backdrop-filter: blur(12px);
+    /* The frosted glass effect */
     border: 1px solid var(--color-border);
     border-radius: 12px;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy feeling */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bouncy feeling */
     position: relative;
     overflow: hidden;
 }
@@ -87,12 +104,14 @@ h1.hero-title {
 .minimal-card:hover {
     border-color: var(--color-border-highlight);
     transform: translateY(-5px) scale(1.01);
-    box-shadow: 
-        0 20px 40px -10px rgba(0, 0, 0, 0.8), /* Deep shadow */
-        0 0 20px var(--color-accent-dim);     /* Orange glow */
+    box-shadow:
+        0 20px 40px -10px rgba(0, 0, 0, 0.8),
+        /* Deep shadow */
+        0 0 20px var(--color-accent-dim);
+    /* Orange glow */
 }
 
-.minimal-card:hover h2, 
+.minimal-card:hover h2,
 .minimal-card:hover h3 {
     color: var(--color-accent);
     transition: color 0.3s ease;
@@ -132,7 +151,8 @@ h1.hero-title {
 }
 
 .btn-primary:hover {
-    color: #000000; /* Text turns black for contrast against orange */
+    color: #000000;
+    /* Text turns black for contrast against orange */
     border-color: var(--color-accent);
     box-shadow: 0 0 25px var(--color-glow);
 }
@@ -170,8 +190,268 @@ h1.hero-title {
     transform: translateY(20px);
     transition: all 0.8s ease-out;
 }
+
 .reveal.visible {
     opacity: 1;
     filter: blur(0);
     transform: translateY(0);
+}
+
+/* --- BLUEPRINT CHAT COMPONENT --- */
+.blueprint-chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Input Fields Row */
+.blueprint-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 640px) {
+    .blueprint-fields {
+        grid-template-columns: 1fr;
+    }
+}
+
+.blueprint-input,
+.blueprint-select {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.blueprint-input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+.blueprint-input:focus,
+.blueprint-select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(255, 95, 31, 0.1);
+}
+
+.blueprint-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.blueprint-select option {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+.blueprint-chat-border {
+    position: relative;
+    display: flex;
+    background: linear-gradient(to bottom right,
+            rgba(255, 95, 31, 0.6),
+            var(--color-border),
+            var(--color-border),
+            var(--color-border),
+            var(--color-border));
+    border-radius: 16px;
+    padding: 1.5px;
+    overflow: hidden;
+}
+
+/* Radial Glow Effect */
+.blueprint-chat-border::after {
+    position: absolute;
+    content: "";
+    top: -10px;
+    left: -10px;
+    background: radial-gradient(ellipse at center,
+            var(--color-accent),
+            rgba(255, 95, 31, 0.3),
+            rgba(255, 95, 31, 0.1),
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0));
+    width: 40px;
+    height: 40px;
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.blueprint-chat-inner {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.blueprint-chat-input {
+    position: relative;
+    display: flex;
+}
+
+.blueprint-textarea {
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    min-height: 100px;
+    max-height: 200px;
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 300;
+    padding: 16px;
+    resize: none;
+    outline: none;
+    line-height: 1.6;
+}
+
+.blueprint-textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.blueprint-textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.blueprint-textarea::-webkit-scrollbar-thumb {
+    background: var(--color-border-highlight);
+    border-radius: 4px;
+}
+
+.blueprint-textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+}
+
+.blueprint-textarea::placeholder {
+    color: var(--color-text-secondary);
+    transition: all 0.3s ease;
+}
+
+.blueprint-textarea:focus::placeholder {
+    color: var(--color-text-muted);
+}
+
+.blueprint-chat-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-top: 1px solid var(--color-border);
+}
+
+.blueprint-btns-add {
+    display: flex;
+    gap: 12px;
+}
+
+.blueprint-btns-add button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.blueprint-btns-add button:hover {
+    transform: translateY(-2px);
+    color: var(--color-accent);
+}
+
+.blueprint-btns-add button:hover svg {
+    filter: drop-shadow(0 0 6px var(--color-accent));
+}
+
+.blueprint-btn-submit {
+    display: flex;
+    padding: 3px;
+    background-image: linear-gradient(to top,
+            var(--color-surface),
+            var(--color-border-highlight),
+            var(--color-surface));
+    border-radius: 10px;
+    box-shadow: inset 0 4px 2px -2px rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.blueprint-btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    backdrop-filter: blur(3px);
+    color: var(--color-text-secondary);
+}
+
+.blueprint-btn-submit svg {
+    transition: all 0.3s ease;
+}
+
+.blueprint-btn-submit:hover .blueprint-btn-icon {
+    color: var(--color-accent);
+}
+
+.blueprint-btn-submit:hover svg {
+    filter: drop-shadow(0 0 6px var(--color-accent));
+}
+
+.blueprint-btn-submit:focus svg {
+    color: var(--color-accent);
+    filter: drop-shadow(0 0 8px var(--color-accent));
+    transform: scale(1.1) rotate(45deg) translateX(-2px) translateY(1px);
+}
+
+.blueprint-btn-submit:active {
+    transform: scale(0.95);
+}
+
+/* Quick Select Tags */
+.blueprint-tags {
+    padding: 16px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    font-size: 12px;
+    gap: 8px;
+}
+
+.blueprint-tags span {
+    padding: 6px 14px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+}
+
+.blueprint-tags span:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: var(--color-accent-dim);
 }
