@@ -16,13 +16,7 @@ export const forgeCategories = [
         longDesc: 'We engineer Software-as-a-Service platforms designed to scale with your ambitions. From MVP to enterprise-ready.',
         tools: ['React', 'Node.js', 'PostgreSQL', 'AWS']
       },
-      {
-        id: 'mobile',
-        title: 'Mobile Apps',
-        desc: 'Native iOS & Android applications',
-        longDesc: 'From concept to App Store, we build mobile applications that users love with seamless performance.',
-        tools: ['React Native', 'Flutter', 'Swift', 'Kotlin']
-      },
+
       {
         id: 'landing',
         title: 'Landing Pages',

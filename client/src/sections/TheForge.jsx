@@ -229,23 +229,17 @@ export default function Forge({ showTitle = true }) {
               viewport={{ once: true, margin: "-100px" }}
               className="relative"
             >
-              {/* Category Header */}
+              {/* Category Header - UNIFIED ORANGE THEME */}
               <div className="flex items-center gap-6 mb-10">
                 {/* Icon */}
-                <div className={`p-4 rounded-xl border transition-all duration-500 ${category.id === 'forge' ? 'bg-accent/10 border-accent text-accent' :
-                    category.id === 'craft' ? 'bg-purple-500/10 border-purple-500/50 text-purple-400' :
-                      'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
-                  }`}>
+                <div className="p-4 rounded-xl border transition-all duration-500 bg-accent/10 border-accent/50 text-accent">
                   {CategoryIcons[category.id]()}
                 </div>
 
                 {/* Title & Description */}
                 <div className="flex-1">
                   <div className="flex items-baseline gap-3 mb-1">
-                    <h3 className={`text-3xl md:text-4xl font-heading ${category.id === 'forge' ? 'text-accent' :
-                        category.id === 'craft' ? 'text-purple-400' :
-                          'text-emerald-400'
-                      }`}>
+                    <h3 className="text-3xl md:text-4xl font-heading text-accent">
                       {category.name}
                     </h3>
                     <span className="text-text-secondary font-body text-sm tracking-wider uppercase">
@@ -256,13 +250,10 @@ export default function Forge({ showTitle = true }) {
                 </div>
 
                 {/* Decorative Line */}
-                <div className={`hidden md:block flex-1 h-px ${category.id === 'forge' ? 'bg-gradient-to-r from-accent/50 to-transparent' :
-                    category.id === 'craft' ? 'bg-gradient-to-r from-purple-500/50 to-transparent' :
-                      'bg-gradient-to-r from-emerald-500/50 to-transparent'
-                  }`} />
+                <div className="hidden md:block flex-1 h-px bg-gradient-to-r from-accent/50 to-transparent" />
               </div>
 
-              {/* Service Cards Grid */}
+              {/* Service Cards Grid - SIMPLIFIED HOVER */}
               <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -270,48 +261,69 @@ export default function Forge({ showTitle = true }) {
                 viewport={{ once: true }}
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
               >
-                {category.services.map((service) => (
-                  <motion.div
-                    key={service.id}
-                    variants={cardVariants}
-                    className={`group relative p-5 rounded-xl border backdrop-blur-md transition-all duration-500 cursor-pointer overflow-hidden
-                      bg-surface/40 hover:bg-surface/70 border-border 
-                      hover:shadow-[0_0_25px_rgba(255,95,31,0.1)]
-                      ${category.id === 'forge' ? 'hover:border-accent/50' :
-                        category.id === 'craft' ? 'hover:border-purple-500/50' :
-                          'hover:border-emerald-500/50'}`}
-                  >
-                    {/* Hover Glow Line */}
-                    <div className={`absolute top-0 left-0 right-0 h-[2px] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ${category.id === 'forge' ? 'bg-accent' :
-                        category.id === 'craft' ? 'bg-purple-500' :
-                          'bg-emerald-500'
-                      }`} />
-
-                    {/* Icon */}
-                    <div className={`mb-4 p-2.5 rounded-lg inline-block border transition-all duration-500
-                      bg-base border-border text-text-secondary
-                      ${category.id === 'forge' ? 'group-hover:text-accent group-hover:border-accent/50' :
-                        category.id === 'craft' ? 'group-hover:text-purple-400 group-hover:border-purple-500/50' :
-                          'group-hover:text-emerald-400 group-hover:border-emerald-500/50'}`}
+                {category.services.map((service, index) => {
+                  return (
+                    <motion.div
+                      key={service.id}
+                      variants={cardVariants}
+                      className="group relative h-[320px] rounded-2xl overflow-hidden bg-surface/30 backdrop-blur-sm border border-white/5 cursor-pointer"
                     >
-                      {getServiceIcon(service.id)}
-                    </div>
+                      {/* --- Simplified Hover Background (Single fade, 20% opacity) --- */}
+                      <div className="absolute inset-0 bg-[#FF5F1F] opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-20 z-0" />
 
-                    {/* Title */}
-                    <h4 className={`font-heading text-lg mb-2 transition-colors duration-300 text-text-primary
-                      ${category.id === 'forge' ? 'group-hover:text-accent' :
-                        category.id === 'craft' ? 'group-hover:text-purple-400' :
-                          'group-hover:text-emerald-400'}`}
-                    >
-                      {service.title}
-                    </h4>
+                      {/* --- Default Content (Visible, fades out/down on hover) --- */}
+                      <div className="relative z-10 h-full p-6 flex flex-col justify-between transition-all duration-300 group-hover:opacity-0 group-hover:translate-y-4">
+                        {/* Header */}
+                        <div className="flex justify-between items-start">
+                          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-accent">
+                            {getServiceIcon(service.id)}
+                          </div>
+                          <span className="font-mono text-xs text-white/20">0{index + 1}</span>
+                        </div>
 
-                    {/* Description */}
-                    <p className="text-sm text-text-secondary leading-relaxed">
-                      {service.desc}
-                    </p>
-                  </motion.div>
-                ))}
+                        {/* Body */}
+                        <div>
+                          <h4 className="text-xl font-heading text-text-primary mb-2">{service.title}</h4>
+                          <p className="text-sm text-text-secondary">{service.desc}</p>
+                        </div>
+
+                        {/* Footer Indicator */}
+                        <div className="flex justify-end opacity-50">
+                          <span className="w-8 h-1 rounded-full bg-current text-white/20"></span>
+                        </div>
+                      </div>
+
+                      {/* --- Hover/Active Content (Hidden, fades in/up on hover) --- */}
+                      <div className="absolute inset-0 z-20 p-6 flex flex-col items-center justify-center text-center opacity-0 translate-y-4 transition-all duration-500 delay-100 group-hover:opacity-100 group-hover:translate-y-0 text-white">
+
+                        <h4 className="text-2xl font-bold mb-3">{service.title}</h4>
+
+                        <p className="text-sm text-white/90 mb-6 leading-relaxed">
+                          {service.longDesc || service.desc}
+                        </p>
+
+                        {/* Tools/Tags */}
+                        {service.tools && (
+                          <div className="flex flex-wrap gap-2 justify-center">
+                            {service.tools.map(tool => (
+                              <span key={tool} className="px-3 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-black/20 backdrop-blur-md border border-white/20">
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="mt-6 pt-6 border-t border-white/20 w-full flex items-center justify-center gap-2 text-xs font-bold tracking-widest uppercase">
+                          <span>Initialize</span>
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </div>
+
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </motion.div>
             </motion.div>
           ))}
