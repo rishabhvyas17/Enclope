@@ -1,218 +1,161 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 
-// --- ICONS (Geometric & Technical) ---
-const Icons = {
-  Workflow: () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <rect x="3" y="3" width="18" height="18" rx="2" strokeOpacity="0.5" />
-      <path d="M9 9h6" />
-      <path d="M9 13h6" />
-      <path d="M9 17h4" />
-    </svg>
-  ),
-  Collaboration: () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  ),
-  Output: () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-    </svg>
-  ),
-  Impact: () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <circle cx="12" cy="12" r="10" strokeOpacity="0.5" />
-      <path d="M2 12h20" />
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-    </svg>
-  )
-};
-
-// --- DATA ---
-const specs = [
+const cards = [
   {
-    id: 1,
-    label: "WORKFLOW",
-    current: "Watching Tutorials",
-    upgrade: "Shipping Features",
-    icon: <Icons.Workflow />,
-    desc: "Stop consuming. Start creating."
+    id: "01",
+    title: "Velocity",
+    subtitle: "Rapid Execution",
+    description: "We ship at the speed of thought. No bureaucracy, just pure momentum.",
+    // Image: Long exposure highway (Speed)
+    image: "https://images.unsplash.com/photo-1492551557933-34265f7af79e?q=80&w=1920&auto=format&fit=crop"
   },
   {
-    id: 2,
-    label: "ENVIRONMENT",
-    current: "Isolated (Localhost)",
-    upgrade: "Collaborative (Git)",
-    icon: <Icons.Collaboration />,
-    desc: "Code alone, you break it. Code together, you build it."
+    id: "02",
+    title: "Precision",
+    subtitle: "Pixel Perfect",
+    description: "Architecture that scales. Code that is clean, tested, and bulletproof.",
+    // Image: Abstract Geometry (Structure)
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop"
   },
   {
-    id: 3,
-    label: "OUTPUT",
-    current: "Static Certificate",
-    upgrade: "Live Portfolio",
-    icon: <Icons.Output />,
-    desc: "Recruiters don't verify PDFs. They click links."
-  },
-  {
-    id: 4,
-    label: "MARKET VALUE",
-    current: "Theoretical Knowledge",
-    upgrade: "Proven Experience",
-    icon: <Icons.Impact />,
-    desc: "Degree gets the interview. Work gets the job."
+    id: "03",
+    title: "Impact",
+    subtitle: "Market Force",
+    description: "We don't just build apps. We build businesses that dent the universe.",
+    // Image: Nebula/Explosion (Impact)
+    image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1920&auto=format&fit=crop"
   }
 ];
 
-// --- ANIMATION VARIANTS ---
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 }
-  }
-};
+// --- 3D PARALLAX CARD ---
+const TriptychCard = ({ card, index }) => {
+  const ref = useRef(null);
 
-const cardVariants = {
-  hidden: { opacity: 0, x: -30 },
-  show: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 50 } }
+  // Mouse Physics
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Smooth out the mouse movement
+  const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
+  const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
+
+  function handleMouseMove({ clientX, clientY, currentTarget }) {
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    const xPct = (clientX - left) / width - 0.5;
+    const yPct = (clientY - top) / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  // Parallax Transforms
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-15deg", "15deg"]);
+  const bgX = useTransform(mouseX, [-0.5, 0.5], ["-10%", "10%"]);
+  const bgY = useTransform(mouseY, [-0.5, 0.5], ["-10%", "10%"]);
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: index * 0.2 }}
+      viewport={{ once: true }}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d"
+      }}
+      className="group relative h-[600px] w-full bg-[#050505] rounded-2xl overflow-hidden border border-white/5 cursor-none perspective-[1000px]"
+    >
+      {/* 1. THE HIDDEN WORLD (Background Image) */}
+      <motion.div
+        style={{ x: bgX, y: bgY, scale: 1.2 }}
+        className="absolute inset-0 z-0 opacity-0 group-hover:opacity-60 transition-opacity duration-700 ease-out"
+      >
+        <img 
+          src={card.image} 
+          alt={card.title} 
+          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+        />
+        {/* Dark Overlay to keep text readable */}
+        <div className="absolute inset-0 bg-black/60 mix-blend-multiply" />
+      </motion.div>
+
+      {/* 2. THE BLACK GLASS (Default State) */}
+      <div className="absolute inset-0 z-10 bg-black/80 group-hover:bg-transparent transition-colors duration-700" />
+
+      {/* 3. CONTENT LAYER (Floats on top) */}
+      <div className="relative z-20 h-full p-10 flex flex-col justify-between pointer-events-none" style={{ transform: "translateZ(50px)" }}>
+        
+        {/* Top: Header */}
+        <div className="flex justify-between items-start">
+          <span className="font-mono text-xs text-white/30 border border-white/10 px-2 py-1 rounded-full group-hover:text-white group-hover:border-white/30 transition-colors">
+            {card.id}
+          </span>
+          <motion.div 
+            className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          >
+            <ArrowUpRight className="text-white w-5 h-5" />
+          </motion.div>
+        </div>
+
+        {/* Bottom: Typography */}
+        <div className="transform transition-transform duration-500 group-hover:translate-y-[-10px]">
+          <h3 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tighter">
+            {card.title}
+          </h3>
+          <div className="h-0 overflow-hidden group-hover:h-auto transition-all duration-500">
+             <p className="text-lg text-white/80 font-light leading-relaxed max-w-xs pt-4 border-t border-white/20">
+               {card.description}
+             </p>
+          </div>
+          <div className="group-hover:hidden text-accent font-mono text-xs tracking-[0.3em] uppercase mt-2">
+            {card.subtitle}
+          </div>
+        </div>
+      </div>
+
+      {/* 4. GLOSS OVERLAY (Apple Shine) */}
+      <div className="absolute inset-0 z-30 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-700 bg-gradient-to-tr from-white/5 to-transparent mix-blend-overlay" />
+
+    </motion.div>
+  );
 };
 
 export default function ValueProposition() {
-  const [hovered, setHovered] = useState(null);
-
-  // Map icons to IDs
-  const getIcon = (id) => {
-    if (id == 1) return <Icons.Workflow />;
-    if (id == 2) return <Icons.Collaboration />;
-    if (id == 3) return <Icons.Output />;
-    if (id == 4) return <Icons.Impact />;
-    return <Icons.Workflow />;
-  };
-
   return (
-    <section className="py-24 relative w-full overflow-hidden">
+    <section className="relative py-32 bg-black overflow-hidden">
       
       {/* Background Ambience */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-accent/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(20,20,20,1)_0%,_rgba(0,0,0,1)_100%)] z-0" />
 
       <div className="container mx-auto px-6 relative z-10">
         
-        {/* Header */}
-        <div className="mb-12 max-w-4xl">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="flex items-center gap-3 mb-4"
-          >
-            {/* Stable Dot (No Pulse) */}
-            <span className="w-2 h-2 bg-accent rounded-full shadow-[0_0_10px_#ff7f50]"></span>
-            <span className="text-accent font-heading tracking-[0.2em] uppercase text-xs">System Analysis</span>
-          </motion.div>
-          
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold text-text-primary leading-tight"
-          >
-            Don't just learn. <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-text-primary via-text-secondary to-transparent">Evolve.</span>
-          </motion.h2>
+        {/* HEADER */}
+        <div className="mb-24 text-center">
+           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+             The <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">Foundry</span> Pillars
+           </h2>
+           <p className="text-text-secondary max-w-xl mx-auto">
+             Explore the core principles that define our engineering output.
+           </p>
         </div>
 
-        {/* The Spec Sheet Grid */}
-        <div className="relative max-w-7xl mx-auto">
-          
-          {/* The Circuit Line */}
-          <motion.div 
-            initial={{ height: 0 }}
-            whileInView={{ height: "100%" }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute left-[28px] top-6 bottom-6 w-px bg-gradient-to-b from-transparent via-border to-transparent md:block hidden z-0"
-          />
-
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
-            className="flex flex-col gap-5" 
-          >
-            {specs.map((item) => (
-              <motion.div
-                key={item.id}
-                variants={cardVariants}
-                onMouseEnter={() => setHovered(item.id)}
-                onMouseLeave={() => setHovered(null)}
-                className={`group relative flex flex-col md:flex-row items-center gap-6 p-6 rounded-xl border backdrop-blur-md transition-all duration-500 z-10 overflow-hidden ${
-                  hovered === item.id 
-                    ? 'bg-surface/90 border-accent' // Clean border change, no shadow shimmer
-                    : 'bg-surface/30 border-border hover:border-text-secondary/30'
-                }`}
-              >
-                {/* REMOVED: Background Gradient Sweep */}
-                
-                {/* 1. Icon & Label */}
-                <div className="flex items-center gap-5 w-full md:w-[220px] relative z-10">
-                  <div className={`p-3 rounded-lg border transition-all duration-500 ${hovered === item.id ? 'bg-accent text-base border-accent rotate-3 scale-110' : 'bg-base border-border text-text-secondary'}`}>
-                    {getIcon(item.id)}
-                  </div>
-                  <span className="font-heading text-xs tracking-[0.15em] text-text-secondary uppercase group-hover:text-text-primary transition-colors">
-                    {item.label}
-                  </span>
-                </div>
-
-                {/* 2. The Comparison */}
-                <div className="flex items-center justify-center md:justify-start gap-6 md:gap-10 w-full md:flex-1 relative z-10">
-                  {/* Current State */}
-                  <div className={`text-lg md:text-xl transition-all duration-500 text-right md:text-left font-light ${hovered === item.id ? 'text-text-secondary/20 blur-[1px]' : 'text-text-secondary'}`}>
-                    {item.current}
-                  </div>
-                  
-                  {/* Arrow */}
-                  <div className="relative flex-shrink-0">
-                    <span className={`text-xl transition-all duration-500 block ${hovered === item.id ? 'text-accent translate-x-3 scale-125' : 'text-border'}`}>
-                      →
-                    </span>
-                  </div>
-
-                  {/* New State */}
-                  <div className={`text-lg md:text-2xl font-bold transition-all duration-500 ${hovered === item.id ? 'text-accent scale-105 drop-shadow-[0_0_15px_rgba(255,95,31,0.5)]' : 'text-text-primary'}`}>
-                    {item.upgrade}
-                  </div>
-                </div>
-
-                {/* 3. Insight */}
-                <div className="w-full md:w-1/3 text-center md:text-right hidden md:block relative z-10">
-                  <p className={`text-sm transition-all duration-500 ${hovered === item.id ? 'text-text-primary opacity-100 translate-y-0' : 'text-text-secondary opacity-0 translate-y-2'}`}>
-                    "{item.desc}"
-                  </p>
-                </div>
-
-              </motion.div>
-            ))}
-          </motion.div>
+        {/* THE TRIPTYCH GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 perspective-[2000px]">
+          {cards.map((card, index) => (
+            <TriptychCard key={card.id} card={card} index={index} />
+          ))}
         </div>
-
-        {/* Final Trigger */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-20 text-center"
-        >
-          <button className="btn-primary text-lg px-12 py-4 rounded-full group relative overflow-hidden hover:scale-105 transition-transform duration-300">
-            <span className="relative z-10 group-hover:text-base font-bold tracking-wider">Initialize Upgrade</span>
-            <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
-          </button>
-        </motion.div>
 
       </div>
     </section>

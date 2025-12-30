@@ -32,26 +32,32 @@ export default function HomePage() {
         <FoundryPulse />
         <ValueProposition />
         
-        <SectionPreview
-          subtitle="Our Services"
-          title="The Forge"
-          description="From robust SaaS platforms to data-driven marketing strategies, we offer a complete suite of digital services built by the next generation of talent."
-          imageUrl="https://placehold.co/800x600/0A0A0A/EAEAEA?text=Services"
-          linkTo="/forge"
-        />
-        
-        <SectionPreview
-          subtitle="Our Work"
-          title="The Showroom"
-          description="We don't just talk about quality, we deliver it. Explore our gallery of finished projects and see the impact of our student-led teams."
-          imageUrl="https://placehold.co/800x600/0A0A0A/EAEAEA?text=Portfolio"
-          linkTo="/showroom"
-          reverse={true}
-        />
+        {/* THE FORGE (Services) - Image Left */}
+<SectionPreview 
+  subtitle="Our Capabilities"
+  title="The Forge"
+  description="We don't just write code. We architect solutions. From high-scale SaaS platforms to immersive web experiences, we bring professional-grade engineering to every commit."
+  image="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop" // Replace with your own asset
+  label="Service Catalog"
+  linkText="Explore Services"
+  linkUrl="/services"
+  reversed={true} // Image on Right
+/>
+
+{/* THE SHOWROOM (Work) - Image Right */}
+<SectionPreview 
+  subtitle="Selected Works"
+  title="The Showroom"
+  description="Evidence of execution. Browse our gallery of shipped products, open-source contributions, and experimental prototypes."
+  image="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop" // Replace with your own asset
+  label="Project Gallery"
+  linkText="View Case Studies"
+  linkUrl="/work"
+  reversed={false} // Image on Left
+/>
         
         <EnterFoundry />
         <StarterKit />
-        <Crucible />
         
       </div>
     </>
