@@ -1,150 +1,218 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useSpring } from 'framer-motion';
+import { Terminal, Hammer, Network, ChevronDown, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const phases = [
   {
     id: "01",
-    title: "PROTOCOL",
-    subtitle: "The Calibration",
-    desc: "Master the internal stack. Break things in the sandbox. Learn the workflow.",
-    status: "INITIATION",
-    time: "1-2 Months"
+    role: "The Apprentice",
+    duration: "Months 1-2",
+    tag: "Calibration",
+    desc: "Raw potential meets engineering discipline. You break things in the Sandbox to understand how they work.",
+    icon: Terminal,
+    specs: [
+      "Master the Enclope Stack",
+      "Internal Tool Development",
+      "Bug Fixes & Refactoring",
+      "Strict Code Review Protocol"
+    ]
   },
   {
     id: "02",
-    title: "DEPLOYMENT",
-    subtitle: "The Arena",
-    desc: "Cleared for duty. Join a squad. Ship live SaaS products for paying clients.",
-    status: "ACTIVE DUTY",
-    time: "3-5 Months"
+    role: "The Artisan",
+    duration: "Months 3-5",
+    tag: "Forging",
+    desc: "You stop simulating and start shipping. You join a live squad to build and deploy real client features.",
+    icon: Hammer,
+    specs: [
+      "Feature Ownership (End-to-End)",
+      "Database Schema Design",
+      "Production Deployments",
+      "Client-Facing Documentation"
+    ]
   },
   {
     id: "03",
-    title: "COMMAND",
-    subtitle: "The Vanguard",
-    desc: "Architect solutions. Lead junior squads. Own the product roadmap.",
-    status: "ELITE TIER",
-    time: "6+ Months"
+    role: "The Architect",
+    duration: "Months 6+",
+    tag: "Command",
+    desc: "You evolve from builder to leader. You design the systems that others build and mentor the next cohort.",
+    icon: Network,
+    specs: [
+      "System Architecture Design",
+      "Sprint Planning & Leadership",
+      "Code Review Authority",
+      "Junior Mentorship"
+    ]
   }
 ];
+
+// --- COMPONENT: INTERACTIVE CARD ---
+const SchematicNode = ({ phase, index }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0.2, x: 20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ margin: "-20% 0px -20% 0px" }}
+      transition={{ duration: 0.5 }}
+      // CHANGED: Reduced vertical padding from py-12 to py-6 for compact look
+      className="relative pl-12 md:pl-24 py-6 group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* 1. HORIZONTAL CONNECTOR */}
+      {/* CHANGED: Adjusted top position (top-14) to align with smaller box */}
+      <div className={`absolute left-[20px] md:left-[50px] top-14 w-8 md:w-16 h-px transition-colors duration-500 ${isHovered ? 'bg-accent' : 'bg-white/10'}`} />
+      
+      {/* 2. THE CARD CONTENT */}
+      <div className={`relative border bg-[#0A0A0A] rounded-xl overflow-hidden transition-all duration-500 ${isHovered ? 'border-accent/50 shadow-[0_0_30px_rgba(255,95,31,0.1)]' : 'border-white/5'}`}>
+        
+        {/* Hover Background Effect */}
+        <div className={`absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 transition-opacity duration-500 ${isHovered ? 'opacity-100' : ''}`} />
+
+        {/* CHANGED: Reduced padding from p-8 to p-6 */}
+        <div className="relative z-10 p-6">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+             <div className="flex items-center gap-3">
+                <div className={`flex items-center justify-center w-10 h-10 rounded border transition-colors duration-500 ${isHovered ? 'bg-accent text-white border-accent' : 'bg-white/5 text-accent border-white/5'}`}>
+                   <phase.icon size={18} />
+                </div>
+                <span className="font-mono text-[10px] text-white/50 uppercase tracking-widest">
+                  Phase_{phase.id}
+                </span>
+             </div>
+             <div className={`px-2 py-1 rounded border transition-colors duration-500 ${isHovered ? 'border-accent/30 bg-accent/10 text-accent' : 'border-white/10 bg-white/5 text-white/30'}`}>
+                <span className="text-[10px] font-mono uppercase tracking-widest">{phase.duration}</span>
+             </div>
+          </div>
+
+          {/* Title & Description */}
+          {/* CHANGED: Reduced title size to text-2xl */}
+          <h3 className="text-2xl font-bold text-white mb-2">{phase.role}</h3>
+          <p className="text-text-secondary leading-relaxed font-light text-sm max-w-xl">
+            {phase.desc}
+          </p>
+
+          {/* 3. THE REVEAL (Tech Specs) */}
+          <motion.div 
+            initial={false}
+            animate={{ height: isHovered ? "auto" : 0, opacity: isHovered ? 1 : 0 }}
+            className="overflow-hidden"
+          >
+            {/* CHANGED: Reduced margins (pt-4 mt-4) */}
+            <div className="pt-4 mt-4 border-t border-white/10">
+               <span className="text-[10px] font-mono text-accent uppercase tracking-widest mb-3 block">
+                 // Operational Protocols
+               </span>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                 {phase.specs.map((spec, i) => (
+                   <div key={i} className="flex items-center gap-2 text-xs text-white/70">
+                      <div className="w-1 h-1 bg-accent rounded-full" />
+                      {spec}
+                   </div>
+                 ))}
+               </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Corner Decor */}
+        <div className={`absolute top-0 right-0 w-3 h-3 border-t border-r transition-colors duration-500 ${isHovered ? 'border-accent' : 'border-white/20'}`} />
+        <div className={`absolute bottom-0 left-0 w-3 h-3 border-b border-l transition-colors duration-500 ${isHovered ? 'border-accent' : 'border-white/20'}`} />
+
+      </div>
+
+    </motion.div>
+  );
+};
 
 export default function EnterFoundry() {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 20%", "end center"]
+    offset: ["start center", "end center"]
   });
 
-  const beamHeight = useSpring(useTransform(scrollYProgress, [0, 1], ["0%", "100%"]), {
-    stiffness: 500,
-    damping: 90
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
   });
 
   return (
-    <section ref={containerRef} className="py-24 relative w-full overflow-hidden">
+    <section ref={containerRef} className="relative py-32 bg-black border-b border-white/5 overflow-hidden">
       
-      <div className="container mx-auto px-6 max-w-5xl">
+      {/* Blueprint Grid Background */}
+      <div className="absolute inset-0 opacity-[0.04] pointer-events-none" 
+           style={{ 
+              backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', 
+              backgroundSize: '40px 40px' 
+           }} 
+      />
+
+      <div className="container mx-auto px-6 max-w-5xl relative z-10">
         
-        {/* 1. HEADER */}
-        <div className="relative pl-16 md:pl-24 mb-16">
-          <div className="absolute left-[29px] md:left-[45px] top-1/2 -translate-y-1/2 w-3 h-3 bg-accent rounded-full shadow-[0_0_20px_#ff7f50] z-10 animate-pulse"></div>
-          
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-4xl md:text-6xl font-bold text-text-primary leading-none tracking-tight">
-              THE <span className="text-accent">TRAJECTORY</span>
-            </h2>
-          
-          </motion.div>
+        {/* HEADER */}
+        {/* CHANGED: Updated Text to be clear and visionary */}
+        <div className="pl-12 md:pl-24 mb-16">
+           <motion.div 
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+           >
+             <span className="font-mono text-xs text-accent tracking-[0.3em] uppercase mb-4 block">
+               Career Roadmap
+             </span>
+             <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-none mb-6">
+               Your Path to <span className="text-white/40">Mastery.</span>
+             </h2>
+             <p className="text-text-secondary max-w-lg text-lg font-light">
+               We don't just assign tasks; we build engineers. See exactly how you will evolve from a student into a system architect.
+             </p>
+           </motion.div>
         </div>
 
-        {/* 2. THE JOURNEY SYSTEM */}
+        {/* THE SCHEMATIC CIRCUIT */}
         <div className="relative">
           
-          {/* Background Track */}
-          <div className="absolute left-[32px] md:left-[48px] top-[-20px] bottom-0 w-[1px] bg-white/10 z-0"></div>
-          
-          {/* Foreground Laser */}
+          {/* Main Track */}
+          <div className="absolute left-[20px] md:left-[50px] top-0 bottom-0 w-[2px] bg-white/5" />
+
+          {/* Active Laser (Scroll Driven) */}
           <motion.div 
-            style={{ height: beamHeight }}
-            className="absolute left-[32px] md:left-[48px] top-[-20px] w-[2px] bg-accent shadow-[0_0_25px_#ff7f50] z-10 origin-top"
+            style={{ scaleY, transformOrigin: "top" }}
+            className="absolute left-[20px] md:left-[50px] top-0 bottom-0 w-[2px] bg-accent shadow-[0_0_20px_#FF5F1F] z-10"
           >
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-6 bg-white blur-[2px] rounded-full shadow-[0_0_20px_white]"></div>
+             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 flex items-center justify-center w-8 h-8 bg-black border border-accent rounded shadow-[0_0_15px_#FF5F1F]">
+                <ChevronDown className="w-4 h-4 text-accent" />
+             </div>
           </motion.div>
 
-          <div className="flex flex-col gap-8"> 
+          {/* Cards */}
+          <div>
             {phases.map((phase, index) => (
-              <motion.div 
-                key={phase.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ margin: "-100px" }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
-                className="relative pl-16 md:pl-24 group"
-              >
-                
-                {/* --- THE NODE (The "Ember") --- */}
-                {/* Default: Dark Orange Border. Hover: Bright Orange + Glow */}
-                <div className="absolute left-[21px] md:left-[37px] top-0 w-[24px] h-[24px] flex items-center justify-center bg-base border-2 border-accent/30 rounded-full z-20 group-hover:border-accent transition-colors duration-500 shadow-[0_0_10px_rgba(0,0,0,0.8)]">
-                  <div className="w-1.5 h-1.5 bg-accent/50 rounded-full group-hover:bg-accent group-hover:scale-150 group-hover:shadow-[0_0_10px_#ff7f50] transition-all duration-500"></div>
-                </div>
-
-                {/* --- THE CARD --- */}
-                <div className="relative p-6 rounded-xl border border-white/5 bg-surface/40 backdrop-blur-xl transition-all duration-500 group-hover:bg-surface/60 group-hover:border-accent/40 group-hover:shadow-[0_10px_40px_-10px_rgba(255,95,31,0.15)] group-hover:translate-x-2 overflow-hidden">
-                  
-                  {/* SPICE 1: Orange Side Bar */}
-                  <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-accent/20 to-transparent group-hover:via-accent transition-all duration-500"></div>
-
-                  {/* SPICE 2: Giant Watermark Number */}
-                  <div className="absolute -right-4 -bottom-8 text-[120px] font-bold font-heading text-accent/[0.03] group-hover:text-accent/[0.07] transition-colors duration-500 select-none pointer-events-none">
-                    {phase.id}
-                  </div>
-
-                  <div className="flex flex-col gap-3 relative z-10">
-                    
-                    <div className="flex items-center justify-between gap-4">
-                      {/* SPICE 3: Title turns Orange on Hover */}
-                      <h3 className="text-2xl md:text-3xl font-bold text-text-secondary group-hover:text-accent transition-colors duration-300">
-                        {phase.title}
-                      </h3>
-                      <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest border border-white/10 px-2 py-1 rounded group-hover:text-accent group-hover:border-accent/30 transition-colors">
-                        {phase.status}
-                      </span>
-                    </div>
-
-                    <p className="text-accent font-mono text-xs tracking-widest uppercase opacity-80">
-                      {phase.subtitle}
-                    </p>
-
-                    <p className="text-text-secondary text-sm leading-relaxed max-w-xl opacity-80 group-hover:opacity-100 transition-opacity">
-                      {phase.desc}
-                    </p>
-                    
-                    <div className="mt-2 flex items-center gap-3 opacity-50 group-hover:opacity-100 transition-all duration-500">
-                       <div className="h-px w-6 bg-accent/50"></div>
-                       <span className="text-xs font-mono text-text-primary">{phase.time}</span>
-                    </div>
-
-                  </div>
-                </div>
-
-              </motion.div>
+              <SchematicNode key={phase.id} phase={phase} index={index} />
             ))}
           </div>
 
         </div>
 
-        {/* 3. FOOTER ACTION */}
-        <div className="relative pl-16 md:pl-24 mt-12">
-           <div className="absolute left-[32px] md:left-[48px] top-[-20px] h-16 w-[1px] bg-gradient-to-b from-accent/50 to-transparent z-0"></div>
-           
-           <button className="group flex items-center gap-4 text-sm font-bold tracking-widest text-text-secondary hover:text-accent transition-colors py-4">
-             <span className="w-12 h-px bg-text-secondary group-hover:bg-accent transition-colors"></span>
-             INITIATE SEQUENCE
-           </button>
+        {/* FOOTER */}
+        <div className="pl-12 md:pl-24 mt-12">
+           <Link 
+             to="/apply"
+             className="inline-flex items-center gap-4 px-8 py-4 bg-white text-black font-bold font-mono text-sm tracking-widest uppercase hover:bg-accent hover:text-white transition-all duration-300 group shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,95,31,0.4)]"
+           >
+             Initialize Sequence
+             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+           </Link>
+           <p className="mt-4 text-xs font-mono text-white/30">
+             // COHORT STATUS: OPEN FOR APPLICATIONS
+           </p>
         </div>
 
       </div>
