@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import JoinPage from './pages/JoinPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicy';
 import ScrollToTop from './components/ScrollToTop';
+import TermsAndConditionsPage from './pages/TermsAndConditions';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/about" element={<CruciblePage />} />
           <Route path="/join" element={<JoinPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsAndConditionsPage />} />
         </Routes>
       </main>
       <Footer />
