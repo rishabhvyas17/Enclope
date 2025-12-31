@@ -476,3 +476,112 @@ h1.hero-title {
     display: flex;
     flex-direction: column;
 }
+
+/* --- JELLO BUTTON (Start Application) --- */
+.jelly-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    background-color: transparent;
+    border: 2px solid var(--color-border-highlight);
+    color: var(--color-text-primary);
+    gap: 12px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: color 0.5s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.jelly-button::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: var(--color-accent);
+    height: 1000px;
+    width: 1000px;
+    border-radius: 50%;
+    top: 100%;
+    left: 100%;
+    transition: all 0.7s;
+}
+
+.jelly-button:hover::before {
+    top: -450px;
+    left: -450px;
+}
+
+.jelly-button:active::before {
+    background: #E0501A;
+    /* Slightly darker orange for active state */
+    transition: background 0s;
+}
+
+.jelly-button .text {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+}
+
+.jelly-button .svg-icon {
+    display: flex;
+    align-items: center;
+}
+
+.jelly-button .svg-icon svg {
+    width: 50px;
+    height: 20px;
+    fill: var(--color-text-primary);
+    transition: fill 0.3s ease;
+}
+
+.jelly-button:hover {
+    border-color: var(--color-accent);
+    color: #000;
+    /* Contrast text on orange background */
+    box-shadow: 0 0 25px var(--color-glow);
+}
+
+.jelly-button:hover .svg-icon svg {
+    fill: #000;
+    animation: jello-vertical 0.9s both;
+    transform-origin: left;
+}
+
+.jelly-button:active {
+    transform: scale(0.95);
+}
+
+@keyframes jello-vertical {
+    0% {
+        transform: scale3d(1, 1, 1);
+    }
+
+    30% {
+        transform: scale3d(0.75, 1.25, 1);
+    }
+
+    40% {
+        transform: scale3d(1.25, 0.75, 1);
+    }
+
+    50% {
+        transform: scale3d(0.85, 1.15, 1);
+    }
+
+    65% {
+        transform: scale3d(1.05, 0.95, 1);
+    }
+
+    75% {
+        transform: scale3d(0.95, 1.05, 1);
+    }
+
+    100% {
+        transform: scale3d(1, 1, 1);
+    }
+}
