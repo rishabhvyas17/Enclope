@@ -239,7 +239,7 @@ export default function Forge({ showTitle = true }) {
                 {/* Title & Description */}
                 <div className="flex-1">
                   <div className="flex items-baseline gap-3 mb-1">
-                    <h3 className="text-3xl md:text-4xl font-heading text-accent">
+                    <h3 className="text-3xl md:text-4xl font-heading text-white">
                       {category.name}
                     </h3>
                     <span className="text-text-secondary font-body text-sm tracking-wider uppercase">
