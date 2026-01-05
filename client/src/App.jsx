@@ -7,6 +7,8 @@ import CruciblePage from './pages/CruciblePage';
 import Footer from './components/Footer';
 import JoinPage from './pages/JoinPage';
 
+
+
 export default function App() {
   return (
     <div className="relative min-h-screen w-full bg-base">
@@ -18,7 +20,7 @@ export default function App() {
           <Route path="/showroom" element={<ShowroomPage />} />
           <Route path="/forge" element={<ForgePage />} />
           <Route path="/about" element={<CruciblePage />} />
-          <Route path="/join" element={<JoinPage />} />
+          <Route path="/apply" element={<JoinPage />} />
         </Routes>
       </main>
       <Footer />
