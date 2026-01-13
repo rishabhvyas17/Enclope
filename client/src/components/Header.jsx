@@ -50,7 +50,7 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <Link to="/join" className="btn-primary px-6 py-2 rounded-full">
+            <Link to="/apply" className="btn-primary px-6 py-2 rounded-full">
               Apply to Join
             </Link>
           </div>
@@ -76,7 +76,7 @@ export default function Header() {
             {link.label}
           </Link>
         ))}
-        <Link to="/join" onClick={handleNavClick} className="btn-primary px-8 py-3 rounded-full mt-4">
+        <Link to="/apply" onClick={handleNavClick} className="btn-primary px-8 py-3 rounded-full mt-4">
           Apply to Join
         </Link>
       </div>

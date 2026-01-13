@@ -10,6 +10,8 @@ import PrivacyPolicyPage from './pages/PrivacyPolicy';
 import ScrollToTop from './components/ScrollToTop';
 import TermsAndConditionsPage from './pages/TermsAndConditions';
 
+
+
 export default function App() {
   return (
     <div className="relative min-h-screen w-full bg-base">
@@ -25,6 +27,7 @@ export default function App() {
           <Route path="/join" element={<JoinPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsAndConditionsPage />} />
+          <Route path="/apply" element={<JoinPage />} />
         </Routes>
       </main>
       <Footer />

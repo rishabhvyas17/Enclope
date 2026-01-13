@@ -1,8 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Github, Twitter, Linkedin, Instagram, ArrowRight } from 'lucide-react';
 
 export default function Footer() {
    const currentYear = new Date().getFullYear();
+   const location = useLocation(); // Get current route
+
+  // Logic: If we are on the Join/Apply page, hide the "Ready to Forge" section
+  const isApplyPage = location.pathname === '/join' || location.pathname === '/apply';
 
    return (
       <footer className="bg-black border-t border-white/5 pt-20 pb-10 relative overflow-hidden">
@@ -18,7 +22,8 @@ export default function Footer() {
          <div className="container mx-auto px-6 max-w-6xl relative z-10">
 
             {/* 1. TOP SECTION: GIANT CTA */}
-            <div className="mb-20 pb-20 border-b border-white/5">
+            {!isApplyPage && (
+               <div className="mb-20 pb-20 border-b border-white/5">
                <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-10">
                   <div className="max-w-2xl">
                      <span className="font-mono text-xs text-accent tracking-[0.3em] uppercase mb-4 block">
@@ -42,6 +47,7 @@ export default function Footer() {
                   </Link>
                </div>
             </div>
+            )}
 
             {/* 2. MIDDLE SECTION: LINKS GRID */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20">
