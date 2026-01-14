@@ -7,7 +7,7 @@ import CruciblePage from './pages/CruciblePage';
 import Footer from './components/Footer';
 import JoinPage from './pages/JoinPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicy';
-import ScrollToTop from './components/ScrollToTop';
+import ScrollToTop from './components/ScrollTop';
 import TermsAndConditionsPage from './pages/TermsAndConditions';
 
 
