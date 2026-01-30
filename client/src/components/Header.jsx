@@ -30,19 +30,19 @@ export default function Header() {
   const navLinks = [
     { href: '/forge', label: 'The Forge' },
     { href: '/showroom', label: 'The Showroom' },
-    { href: '/crucible', label: 'The Crucible' },
+    { href: '/about', label: 'About Us' },
   ];
 
   return (
     <>
       <header className="fixed top-0 left-0 w-full p-4 md:p-6 z-50">
         <nav className={`container mx-auto flex justify-between items-center bg-base/50 backdrop-blur-md p-4 rounded-xl border transition-all duration-300 ${isScrolled ? 'border-border' : 'border-transparent'}`}>
-          
+
           {/* Logo */}
           <Link to="/" onClick={handleNavClick} className="text-3xl font-heading tracking-wider">
             <span className="text-text-primary">E</span><span className="text-text-secondary">nclop</span>
           </Link>
-          
+
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-10 text-sm">
             {navLinks.map(link => (
@@ -50,11 +50,11 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <Link to="/join" className="btn-primary px-6 py-2 rounded-full">
+            <Link to="/apply" className="btn-primary px-6 py-2 rounded-full">
               Apply to Join
             </Link>
           </div>
-          
+
           {/* Mobile Menu Button */}
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-text-primary z-50">
             {/* Simple hamburger/close icon SVG */}
@@ -76,7 +76,7 @@ export default function Header() {
             {link.label}
           </Link>
         ))}
-        <Link to="/join" onClick={handleNavClick} className="btn-primary px-8 py-3 rounded-full mt-4">
+        <Link to="/apply" onClick={handleNavClick} className="btn-primary px-8 py-3 rounded-full mt-4">
           Apply to Join
         </Link>
       </div>

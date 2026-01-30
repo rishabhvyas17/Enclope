@@ -1,55 +1,50 @@
-import { useEffect, useRef } from 'react';
-import { useInView, animate } from 'framer-motion';
-
-// This is a helper component for the count-up animation
-function AnimatedCounter({ to }) {
-  const nodeRef = useRef();
-
-  useEffect(() => {
-    const node = nodeRef.current;
-    
-    // Animate from 0 to the target value
-    const controls = animate(0, to, {
-      duration: 2, // Animation duration of 2 seconds
-      onUpdate(value) {
-        node.textContent = Math.round(value).toLocaleString();
-      }
-    });
-    
-    // Cleanup function to stop the animation if the component unmounts
-    return () => controls.stop();
-  }, [to]);
-
-  return <h3 ref={nodeRef} className="text-4xl md:text-5xl font-bold text-text-primary mb-2" />;
-}
-
-
-// The metrics from your creative brief
-const metrics = [
-  { value: 5, label: 'Active Contributors' },
-  { value: 654, label: 'Lines of Code Today' },
-  { value: 9, label: 'Ideas in The Crucible' },
-  { value: 8, label: 'Projects in The Forge' },
-];
+import { motion } from 'framer-motion';
 
 export default function FoundryPulse() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <section ref={ref} className="py-20">
-      <div className="text-center mb-12">
-        <h2 className="text-5xl md:text-6xl font-bold text-text-primary">
-          The Foundry Pulse
-        </h2>
-      </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-4xl mx-auto">
-        {metrics.map((metric, index) => (
-          <div key={index} className="minimal-card p-6 md:p-8 rounded-xl text-center">
-            {isInView && <AnimatedCounter to={metric.value} />}
-            <p className="text-text-secondary">{metric.label}</p>
-          </div>
-        ))}
+    <section className="relative py-32 w-full bg-black overflow-hidden border-b border-white/5">
+      
+      {/* Ambient Background */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[400px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10 text-center">
+        
+        {/* The Signal Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex items-center justify-center gap-3 mb-8"
+        >
+          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+          <span className="text-[10px] font-mono text-accent tracking-[0.3em] uppercase">
+            System Operational
+          </span>
+          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+        </motion.div>
+
+        {/* The Core Message */}
+        <motion.h2 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="text-4xl md:text-7xl font-bold text-white tracking-tight mb-8"
+        >
+          Bridging the gap between <br />
+          <span className="text-text-secondary opacity-50">Theory</span> and <span className="text-accent">Reality.</span>
+        </motion.h2>
+
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="max-w-2xl mx-auto"
+        >
+          <p className="text-lg md:text-xl text-text-secondary font-light leading-relaxed">
+            We are the student-led foundry where raw potential is calibrated, tested, and deployed into the real world.
+          </p>
+        </motion.div>
+
       </div>
     </section>
   );

@@ -1,46 +1,65 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Hero from '../sections/Hero';
+import { useEffect } from 'react';
+import Lenis from '@studio-freight/lenis';
+
+// --- COMPONENTS ---
 import SectionPreview from '../components/SectionPreview';
+import Hero from '../sections/Hero';
 import FoundryPulse from '../sections/FoundryPulse';
 import ValueProposition from '../sections/ValueProposition';
-import Forge from '../sections/TheForge';
-import Showroom from '../sections/Showroom';
 import EnterFoundry from '../sections/EnterFoundry';
-import Crucible from '../sections/Crucible';
 import StarterKit from '../sections/StarterKit';
+import Crucible from '../sections/Crucible';
 
 export default function HomePage() {
+  useEffect(() => {
+    const lenis = new Lenis();
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  }, []);
+
   return (
     <>
-      <Header />
-      <main>
-        <Hero />
+      <Hero />
+      
+      {/* Wrapper for content */}
+      <div className="content-grid-bg">
+        
+      
+
         <FoundryPulse />
         <ValueProposition />
+        
+        {/* THE FORGE (Services) - Image Left */}
+<SectionPreview 
+  subtitle="Our Capabilities"
+  title="The Forge"
+  description="We don't just write code. We architect solutions. From high-scale SaaS platforms to immersive web experiences, we bring professional-grade engineering to every commit."
+  image="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop" // Replace with your own asset
+  label="Service Catalog"
+  linkText="Explore Services"
+  linkUrl="/services"
+  reversed={true} // Image on Right
+/>
 
-        {/* --- TEASER FOR THE FORGE --- */}
-        <SectionPreview
-          subtitle="Our Services"
-          title="The Forge"
-          description="From robust SaaS platforms to data-driven marketing strategies, we offer a complete suite of digital services built by the next generation of talent."
-          imageUrl="/service.png"
-          linkTo="/forge"
-        />
-
-        {/* --- TEASER FOR THE SHOWROOM --- */}
-        <SectionPreview
-          subtitle="Our Work"
-          title="The Showroom"
-          description="We don't just talk about quality, we deliver it. Explore our gallery of finished projects and see the impact of our student-led teams."
-          imageUrl="/Showroom.png"
-          linkTo="/showroom"
-        />
-
+{/* THE SHOWROOM (Work) - Image Right */}
+<SectionPreview 
+  subtitle="Selected Works"
+  title="The Showroom"
+  description="Evidence of execution. Browse our gallery of shipped products, open-source contributions, and experimental prototypes."
+  image="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop" // Replace with your own asset
+  label="Project Gallery"
+  linkText="View Case Studies"
+  linkUrl="/work"
+  reversed={false} // Image on Left
+/>
+        
         <EnterFoundry />
         <StarterKit />
-        {/* We can decide later if Crucible needs its own preview or stays on the homepage */}
-      </main>
+        
+      </div>
     </>
   );
 }

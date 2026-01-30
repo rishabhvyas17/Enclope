@@ -1,88 +1,90 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useRef, useState, useEffect } from 'react';
+import { Text3D, Center } from '@react-three/drei';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// The text that will be dynamically typed
-const changingTexts = [
-  "Sitting idle? We'll give you the work.",
-  "Have an idea? We'll give you the team.",
-  "Need experience? We'll give you the projects."
-];
-
-export default function Hero() {
-  // State to manage the typing animation
-  const [textIndex, setTextIndex] = useState(0);
-  const [typedText, setTypedText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const handleTyping = () => {
-      const currentText = changingTexts[textIndex];
-      
-      // Determine if we are typing or deleting
-      const updatedText = isDeleting
-        ? currentText.substring(0, typedText.length - 1)
-        // [from www.example.com] This is the deleting logic
-        : currentText.substring(0, typedText.length + 1);
-
-      setTypedText(updatedText);
-
-      // Logic to switch between typing and deleting
-      if (!isDeleting && updatedText === currentText) {
-        // Pause at the end of a sentence
-        setTimeout(() => setIsDeleting(true), 2000);
-      } else if (isDeleting && updatedText === '') {
-        setIsDeleting(false);
-        setTextIndex((prevIndex) => (prevIndex + 1) % changingTexts.length);
-      }
-    };
-
-    const typingSpeed = isDeleting ? 75 : 150;
-    const timeout = setTimeout(handleTyping, typingSpeed);
-    
-    // Cleanup function to clear the timeout
-    return () => clearTimeout(timeout);
-  }, [typedText, textIndex, isDeleting]);
-
+// --- 3D Core Component ---
+function Core() {
+  const meshRef = useRef();
+  // Animate the core's rotation
+  useFrame((state) => {
+    const { clock, mouse } = state;
+    meshRef.current.rotation.y = Math.sin(clock.getElapsedTime() / 2) * 0.2;
+    meshRef.current.position.x = mouse.x * 0.5;
+    meshRef.current.position.y = mouse.y * 0.5;
+  });
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
-      <div className="relative z-10 p-4">
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="text-5xl md:text-7xl lg:text-8xl mb-4 text-text-primary"
-        >
-          Where Ideas Get Built.
-        </motion.h1>
+    <mesh ref={meshRef}>
+      <icosahedronGeometry args={[2.3, 5]} />
+      <meshStandardMaterial 
+        color="#eaeaeaff"
+        metalness={0.9}
+        roughness={0.2}
+        wireframe={true}
+        wireframeLinewidth={15}
+      />
+    </mesh>
+  );
+}
 
-        {/* Dynamic Text Section */}
-        <div className="h-16 md:h-20 flex items-center justify-center">
-            <p className="text-xl md:text-2xl text-text-secondary font-body">
-              {typedText}
-              <span className="text-electric-cyan animate-pulse">|</span>
-            </p>
-        </div>
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-          className="flex flex-col md:flex-row gap-4 justify-center"
-        >
-          <Link to="/join">
-            <button className="btn-primary text-base px-8 py-3 rounded-full">
-              [ I'm here to BUILD ]
-            </button>
-          </Link>
-          <Link to="/forge">
-            <button className="btn-primary text-base px-8 py-3 rounded-full">
-              [ I have a BLUEPRINT ]
-            </button>
-          </Link>
-        </motion.div>
+// --- Dynamic Text Component ---
+const Slogans = [ "Raw Potential, Forged.", "Ideas Into Impact.", "Where Builders Thrive." ];
+
+function AnimatedText() {
+    const [index, setIndex] = useState(0);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIndex((prevIndex) => (prevIndex + 1) % Slogans.length);
+        }, 4000); // Change text every 4 seconds
+        return () => clearInterval(interval);
+    }, []);
+    
+    return (
+         <AnimatePresence mode="wait">
+            <motion.h1
+                key={Slogans[index]}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.8, ease: 'easeInOut' }}
+                className="hero-title text-5xl md:text-7xl lg:text-8xl text-center"
+            >
+                {Slogans[index]}
+            </motion.h1>
+        </AnimatePresence>
+    );
+}
+
+
+// --- Main Hero Component ---
+export default function Hero() {
+  return (
+    <section className="relative h-screen w-full">
+      {/* 3D Canvas */}
+      <div className="absolute top-0 left-0 w-full h-full z-0">
+         <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+          <ambientLight intensity={0.2} />
+          <directionalLight position={[3, 5, 2]} intensity={1.5} />
+          <pointLight position={[-5, -5, 5]} intensity={2} color="#EAEAEA" />
+          <Core />
+        </Canvas>
       </div>
+
+      {/* UI Content */}
+      <div className="relative z-10 h-full flex flex-col justify-center items-center p-4">
+        <AnimatedText />
+        <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="max-w-2xl mx-auto text-base md:text-lg mt-6 text-center text-text-secondary"
+        >
+          Enclope is where ambitious student talent meets real-world projects.
+        </motion.p>
+      </div>
+
+      
     </section>
   );
 }

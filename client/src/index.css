@@ -3,200 +3,585 @@
 @tailwind utilities;
 
 :root {
-            --color-base: #0A0A0A;
-            --color-surface: #141414;
-            --color-muted: #1A1A1A;
-            --color-border: #262626;
-            --color-text-primary: #EAEAEA;
-            --color-text-secondary: #A1A1A1;
-            --color-accent: #EAEAEA; /* Using a soft white as the primary accent for minimalism */
-            --font-body: 'Sora', sans-serif;
-            --font-heading: 'DM Serif Display', serif;
-        }
+    /* --- THEME: OBSIDIAN FOUNDRY --- */
 
-        /* Apply base styles for a more aesthetic feel */
-        body {
-            background-color: var(--color-base);
-            color: var(--color-text-secondary);
-            font-family: var(--font-body);
-            font-weight: 300;
-            overflow-x: hidden;
-            cursor: default;
-        }
+    /* 1. Backgrounds: Not just one black, but layers of depth */
+    --color-base: #050505;
+    /* The Void (Deepest Black) */
+    --color-surface: #0A0A0A;
+    /* Cards (Slightly elevated) */
+    --color-surface-hover: #121212;
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: var(--font-heading);
-            color: var(--color-text-primary);
-            font-weight: 400;
-        }
-        
-        /* Refined Custom Cursor */
-        .custom-cursor {
-            position: fixed;
-            left: 0;
-            top: 0;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s ease-out;
-        }
-        .cursor-dot {
-            width: 6px;
-            height: 6px;
-            background-color: var(--color-accent);
-            border-radius: 50%;
-        }
-        .cursor-outline {
-            width: 28px;
-            height: 28px;
-            border: 1px solid var(--color-accent);
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transition: all 0.2s ease-out;
-            opacity: 0.5;
-        }
-        .custom-cursor.hover .cursor-outline {
-            transform: translate(-50%, -50%) scale(1.5);
-            opacity: 0;
-        }
+    /* 2. Borders: Subtle and refined */
+    --color-border: #1F1F1F;
+    /* Dark grey, barely visible */
+    --color-border-highlight: #333333;
+    /* For hover states */
 
-        /* Subtler Animated Blueprint Background */
-        .blueprint-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background-color: var(--color-base);
-            background-image:
-                linear-gradient(rgba(38, 38, 38, 0.5) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(38, 38, 38, 0.5) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: pan 90s linear infinite;
-        }
-        @keyframes pan {
-            0% { background-position: 0 0; }
-            100% { background-position: 450px 450px; }
-        }
+    /* 3. Text: PLEASANT Contrast (No pure white) */
+    --color-text-primary: #E2E8F0;
+    /* Silver (High readability, low strain) */
+    --color-text-secondary: #94A3B8;
+    /* Ash Grey (For descriptions) */
+    --color-text-muted: #525252;
+    /* Dark Grey (For subtle details) */
 
-        /* Minimalist Card Style */
-        .minimal-card {
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            transition: background 0.3s ease, border 0.3s ease;
-        }
-        .minimal-card:hover {
-            background: var(--color-muted);
-            border-color: var(--color-text-secondary);
-        }
+    /* 4. Creativity: The "Heat" of the Foundry */
+    --color-accent: #FF5F1F;
+    /* Molten Orange (The spark) */
+    --color-accent-dim: rgba(255, 95, 31, 0.1);
+    /* For backgrounds */
+    --color-glow: rgba(255, 95, 31, 0.4);
+    /* For nice shadows */
 
-        /* Page transitions */
-        .page-section {
-            display: none;
-            animation: fadeIn 1s ease-in-out;
-        }
-        .page-section.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* Updated Button Styles */
-        .btn-primary {
-            font-family: var(--font-body);
-            font-weight: 400;
-            background: transparent;
-            border: 1px solid var(--color-border);
-            color: var(--color-text-secondary);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .btn-primary:hover {
-            border-color: var(--color-accent);
-            color: var(--color-accent);
-        }
-        
-        .nav-link.active {
-            color: var(--color-text-primary);
-        }
-
-        /* Loader */
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--color-base);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.8s ease-out;
-        }
-        #loader-logo {
-            width: 80px;
-            height: 80px;
-        }
-        #loader-logo path {
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: draw 3s ease-in-out forwards;
-            stroke: var(--color-text-secondary);
-        }
-        @keyframes draw { to { stroke-dashoffset: 0; } }
-        
-        #hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-
-        /* Scroll-triggered animations with stagger */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .reveal-stagger > * {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
-        }
-
-        .timeline-container {
-  position: relative;
-}
-/* This creates the vertical line down the middle */
-.timeline-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  background-color: var(--color-border);
-  transform: translateX(-50%);
+    /* Fonts */
+    --font-body: 'Sora', sans-serif;
+    --font-heading: 'DM Serif Display', serif;
 }
 
-.timeline-item {
-  position: relative;
+body {
+    background-color: var(--color-base);
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: default;
 }
 
-/* This creates the circle on the timeline */
-.timeline-dot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: var(--color-surface);
-  border: 3px solid var(--color-text-secondary);
+/* --- CREATIVE: FILM GRAIN OVERLAY --- 
+   This makes the black screen feel like a physical material, not a dead pixel. */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.03;
+    /* Very subtle noise */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* --- TYPOGRAPHY CREATIVITY --- */
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-heading);
+    color: var(--color-text-primary);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+
+/* Special Gradient Text for Main Headings (Metal/Chrome look) */
+h1.hero-title {
+    background: linear-gradient(to bottom, #FFFFFF 0%, #94A3B8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 4px 20px rgba(255, 255, 255, 0.1);
+}
+
+
+
+/* --- UI COMPONENT: "DARK GLASS" CARDS --- */
+.minimal-card {
+    background: rgba(20, 20, 20, 0.6);
+    /* Semi-transparent */
+    backdrop-filter: blur(12px);
+    /* The frosted glass effect */
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bouncy feeling */
+    position: relative;
+    overflow: hidden;
+}
+
+/* The "Spotlight" Border Effect on Hover */
+.minimal-card:hover {
+    border-color: var(--color-border-highlight);
+    transform: translateY(-5px) scale(1.01);
+    box-shadow:
+        0 20px 40px -10px rgba(0, 0, 0, 0.8),
+        /* Deep shadow */
+        0 0 20px var(--color-accent-dim);
+    /* Orange glow */
+}
+
+.minimal-card:hover h2,
+.minimal-card:hover h3 {
+    color: var(--color-accent);
+    transition: color 0.3s ease;
+}
+
+/* --- BUTTONS: The "Neon Switch" --- */
+.btn-primary {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-highlight);
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Fill effect on hover */
+.btn-primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background: var(--color-accent);
+    z-index: -1;
+    transition: width 0.3s ease;
+}
+
+.btn-primary:hover::before {
+    width: 100%;
+}
+
+.btn-primary:hover {
+    color: #000000;
+    /* Text turns black for contrast against orange */
+    border-color: var(--color-accent);
+    box-shadow: 0 0 25px var(--color-glow);
+}
+
+/* --- NAVIGATION LINKS --- */
+.nav-link {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -4px;
+    left: 0;
+    background-color: var(--color-accent);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--color-text-primary);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* --- UTILITIES --- */
+.reveal {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(20px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal.visible {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+/* --- BLUEPRINT CHAT COMPONENT --- */
+.blueprint-chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Input Fields Row */
+.blueprint-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 640px) {
+    .blueprint-fields {
+        grid-template-columns: 1fr;
+    }
+}
+
+.blueprint-input,
+.blueprint-select {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.blueprint-input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+.blueprint-input:focus,
+.blueprint-select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(255, 95, 31, 0.1);
+}
+
+.blueprint-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.blueprint-select option {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+.blueprint-chat-border {
+    position: relative;
+    display: flex;
+    background: linear-gradient(to bottom right,
+            rgba(255, 95, 31, 0.6),
+            var(--color-border),
+            var(--color-border),
+            var(--color-border),
+            var(--color-border));
+    border-radius: 16px;
+    padding: 1.5px;
+    overflow: hidden;
+}
+
+/* Radial Glow Effect */
+.blueprint-chat-border::after {
+    position: absolute;
+    content: "";
+    top: -10px;
+    left: -10px;
+    background: radial-gradient(ellipse at center,
+            var(--color-accent),
+            rgba(255, 95, 31, 0.3),
+            rgba(255, 95, 31, 0.1),
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0));
+    width: 40px;
+    height: 40px;
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.blueprint-chat-inner {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.blueprint-chat-input {
+    position: relative;
+    display: flex;
+}
+
+.blueprint-textarea {
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    min-height: 100px;
+    max-height: 200px;
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 300;
+    padding: 16px;
+    resize: none;
+    outline: none;
+    line-height: 1.6;
+}
+
+.blueprint-textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.blueprint-textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.blueprint-textarea::-webkit-scrollbar-thumb {
+    background: var(--color-border-highlight);
+    border-radius: 4px;
+}
+
+.blueprint-textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+}
+
+.blueprint-textarea::placeholder {
+    color: var(--color-text-secondary);
+    transition: all 0.3s ease;
+}
+
+.blueprint-textarea:focus::placeholder {
+    color: var(--color-text-muted);
+}
+
+.blueprint-chat-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-top: 1px solid var(--color-border);
+}
+
+.blueprint-btns-add {
+    display: flex;
+    gap: 12px;
+}
+
+.blueprint-btns-add button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.blueprint-btns-add button:hover {
+    transform: translateY(-2px);
+    color: var(--color-accent);
+}
+
+.blueprint-btns-add button:hover svg {
+    filter: drop-shadow(0 0 6px var(--color-accent));
+}
+
+.blueprint-btn-submit {
+    display: flex;
+    padding: 3px;
+    background-image: linear-gradient(to top,
+            var(--color-surface),
+            var(--color-border-highlight),
+            var(--color-surface));
+    border-radius: 10px;
+    box-shadow: inset 0 4px 2px -2px rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.blueprint-btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    backdrop-filter: blur(3px);
+    color: var(--color-text-secondary);
+}
+
+.blueprint-btn-submit svg {
+    transition: all 0.3s ease;
+}
+
+.blueprint-btn-submit:hover .blueprint-btn-icon {
+    color: var(--color-accent);
+}
+
+.blueprint-btn-submit:hover svg {
+    filter: drop-shadow(0 0 6px var(--color-accent));
+}
+
+.blueprint-btn-submit:focus svg {
+    color: var(--color-accent);
+    filter: drop-shadow(0 0 8px var(--color-accent));
+    transform: scale(1.1) rotate(45deg) translateX(-2px) translateY(1px);
+}
+
+.blueprint-btn-submit:active {
+    transform: scale(0.95);
+}
+
+/* Quick Select Tags */
+.blueprint-tags {
+    padding: 16px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    font-size: 12px;
+    gap: 8px;
+}
+
+.blueprint-tags span {
+    padding: 6px 14px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+}
+
+.blueprint-tags span:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: var(--color-accent-dim);
+}
+
+/* --- FOUNDRY CARDS (Mission/Vision) --- */
+.foundry-card-wrapper {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), var(--color-accent), rgba(255, 255, 255, 0.05));
+    padding: 1px;
+    border-radius: 1.2rem;
+    box-shadow: 0px 1rem 1.5rem -0.9rem rgba(0, 0, 0, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+.foundry-card-content {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-hover) 43%, var(--color-surface) 100%);
+    padding: 2rem;
+    border-radius: 1.2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- JELLO BUTTON (Start Application) --- */
+.jelly-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    background-color: transparent;
+    border: 2px solid var(--color-border-highlight);
+    color: var(--color-text-primary);
+    gap: 12px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: color 0.5s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.jelly-button::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: var(--color-accent);
+    height: 1000px;
+    width: 1000px;
+    border-radius: 50%;
+    top: 100%;
+    left: 100%;
+    transition: all 0.7s;
+}
+
+.jelly-button:hover::before {
+    top: -450px;
+    left: -450px;
+}
+
+.jelly-button:active::before {
+    background: #E0501A;
+    /* Slightly darker orange for active state */
+    transition: background 0s;
+}
+
+.jelly-button .text {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+}
+
+.jelly-button .svg-icon {
+    display: flex;
+    align-items: center;
+}
+
+.jelly-button .svg-icon svg {
+    width: 50px;
+    height: 20px;
+    fill: var(--color-text-primary);
+    transition: fill 0.3s ease;
+}
+
+.jelly-button:hover {
+    border-color: var(--color-accent);
+    color: #000;
+    /* Contrast text on orange background */
+    box-shadow: 0 0 25px var(--color-glow);
+}
+
+.jelly-button:hover .svg-icon svg {
+    fill: #000;
+    animation: jello-vertical 0.9s both;
+    transform-origin: left;
+}
+
+.jelly-button:active {
+    transform: scale(0.95);
+}
+
+@keyframes jello-vertical {
+    0% {
+        transform: scale3d(1, 1, 1);
+    }
+
+    30% {
+        transform: scale3d(0.75, 1.25, 1);
+    }
+
+    40% {
+        transform: scale3d(1.25, 0.75, 1);
+    }
+
+    50% {
+        transform: scale3d(0.85, 1.15, 1);
+    }
+
+    65% {
+        transform: scale3d(1.05, 0.95, 1);
+    }
+
+    75% {
+        transform: scale3d(0.95, 1.05, 1);
+    }
+
+    100% {
+        transform: scale3d(1, 1, 1);
+    }
 }
