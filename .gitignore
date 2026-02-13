@@ -9,3 +9,7 @@ client/.env
 # Vite build files
 client/dist
 .vite/
+
+# Agent files
+.agents/
+.agent/
