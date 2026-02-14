@@ -9,6 +9,8 @@ import {
 
 import Footer from '../components/Footer';
 import { supabase } from '../lib/supabase';
+import { useToast } from '../components/ui/Toast';
+import { submitApplication } from '../lib/api';
 
 export default function JoinUs() {
   const [selectedRole, setSelectedRole] = useState(null); // 'student' | 'client' | null
@@ -234,6 +236,9 @@ export default function JoinUs() {
 function StudentApplication({ onBack }) {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const toast = useToast();
+
   const [formData, setFormData] = useState({
     // Step 1: Identity
     name: '',
@@ -257,22 +262,22 @@ function StudentApplication({ onBack }) {
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
 
+  // Handle form submission
   const handleSubmit = async () => {
+    if (!formData.name || !formData.email) {
+      toast.error('Missing Fields', 'Please fill in your name and email.');
+      return;
+    }
+
     setIsSubmitting(true);
-    try {
-      const { error } = await supabase
-        .from('student_applications')
-        .insert([formData]);
+    const result = await submitApplication(formData, 'student');
+    setIsSubmitting(false);
 
-      if (error) throw error;
-
-      alert('Application Transmitted Successfully! Welcome to the protocol.');
-      onBack();
-    } catch (error) {
-      console.error('Error submitting application:', error);
-      alert('Transmission Failed: ' + error.message);
-    } finally {
-      setIsSubmitting(false);
+    if (result.success) {
+      setIsSubmitted(true);
+      toast.success('Application Transmitted!', 'We will review your profile and get back to you soon.');
+    } else {
+      toast.error('Transmission Failed', result.error || 'Please try again later.');
     }
   };
 
@@ -280,6 +285,28 @@ function StudentApplication({ onBack }) {
   const inputClass = "w-full bg-transparent border-b border-white/20 py-4 text-lg text-white placeholder-white/20 focus:outline-none focus:border-green-500 transition-colors font-light";
   const labelClass = "block text-xs font-mono uppercase tracking-widest text-green-500 mb-1 mt-6";
   const optionalLabel = <span className="text-white/30 text-[10px] ml-2 normal-case tracking-normal">(Optional)</span>;
+
+  // Success state
+  if (isSubmitted) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-2xl text-center py-20"
+      >
+        <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-green-500/20 flex items-center justify-center">
+          <CheckCircle2 className="w-10 h-10 text-green-500" />
+        </div>
+        <h2 className="text-4xl font-bold text-white mb-4">Application Received!</h2>
+        <p className="text-white/60 text-lg mb-8 max-w-md mx-auto">
+          Your profile has been transmitted to our systems. We'll review it and reach out within 48 hours.
+        </p>
+        <Link to="/" className="inline-flex items-center gap-2 text-green-500 hover:text-green-400 font-mono text-sm">
+          <ArrowLeft size={16} /> Return to Home
+        </Link>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -414,10 +441,13 @@ function StudentApplication({ onBack }) {
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-green-500 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-green-500 transition-colors flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : <CheckCircle2 size={16} />}
-                  {isSubmitting ? 'Transmitting...' : 'Transmit Application'}
+                  {isSubmitting ? (
+                    <><Loader2 size={16} className="animate-spin" /> Transmitting...</>
+                  ) : (
+                    <><CheckCircle2 size={16} /> Transmit Application</>
+                  )}
                 </button>
               </div>
             </motion.div>
@@ -435,6 +465,9 @@ function StudentApplication({ onBack }) {
 function ClientApplication({ onBack }) {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const toast = useToast();
+
   const [formData, setFormData] = useState({
     name: '', company: '', email: '', phone: '',
     projectType: '', description: '', budget: '', timeline: '', techStack: ''
@@ -445,40 +478,50 @@ function ClientApplication({ onBack }) {
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
 
+  // Handle form submission
   const handleSubmit = async () => {
+    if (!formData.name || !formData.email) {
+      toast.error('Missing Fields', 'Please fill in your name and email.');
+      return;
+    }
+
     setIsSubmitting(true);
-    try {
-      // Map projectType to column name if needed, or ensure column matches state name
-      const { error } = await supabase
-        .from('client_briefs')
-        .insert([{
-          name: formData.name,
-          company: formData.company,
-          email: formData.email,
-          phone: formData.phone,
-          project_type: formData.projectType,
-          description: formData.description,
-          budget: formData.budget,
-          timeline: formData.timeline,
-          tech_stack: formData.techStack
-        }]);
+    const result = await submitApplication(formData, 'client');
+    setIsSubmitting(false);
 
-      if (error) throw error;
-
-      alert('Brief Submitted Successfully! We will contact you shortly.');
-      onBack();
-    } catch (error) {
-      console.error('Error submitting brief:', error);
-      alert('Submission Failed: ' + error.message);
-    } finally {
-      setIsSubmitting(false);
+    if (result.success) {
+      setIsSubmitted(true);
+      toast.success('Brief Submitted!', 'Our team will review your project and reach out soon.');
+    } else {
+      toast.error('Submission Failed', result.error || 'Please try again later.');
     }
   };
-
 
   const inputClass = "w-full bg-transparent border-b border-white/10 py-4 text-lg text-white placeholder-white/20 focus:outline-none focus:border-blue-500 transition-colors font-light";
   const labelClass = "block text-xs font-mono uppercase tracking-widest text-blue-400 mb-1 mt-6";
   const optionalLabel = <span className="text-white/30 text-[10px] ml-2 normal-case tracking-normal">(Optional)</span>;
+
+  // Success state
+  if (isSubmitted) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-2xl text-center py-20"
+      >
+        <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+          <CheckCircle2 className="w-10 h-10 text-blue-500" />
+        </div>
+        <h2 className="text-4xl font-bold text-white mb-4">Brief Received!</h2>
+        <p className="text-white/60 text-lg mb-8 max-w-md mx-auto">
+          Your project brief has been submitted. Our team will review it and schedule a discovery call.
+        </p>
+        <Link to="/" className="inline-flex items-center gap-2 text-blue-500 hover:text-blue-400 font-mono text-sm">
+          <ArrowLeft size={16} /> Return to Home
+        </Link>
+      </motion.div>
+    );
+  }
 
   // UX: Validate Step 1
   const isStep1Valid = formData.name && formData.email;
@@ -588,8 +631,11 @@ function ClientApplication({ onBack }) {
                   disabled={isSubmitting}
                   className="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-blue-500 transition-colors flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : <CheckCircle2 size={16} />}
-                  {isSubmitting ? 'Submitting...' : 'Submit Brief'}
+                  {isSubmitting ? (
+                    <><Loader2 size={16} className="animate-spin" /> Submitting...</>
+                  ) : (
+                    <><CheckCircle2 size={16} /> Submit Brief</>
+                  )}
                 </button>
               </div>
             </motion.div>

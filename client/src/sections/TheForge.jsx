@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Loader2 } from 'lucide-react';
 import { forgeCategories } from '../data/content';
+import { useToast } from '../components/ui/Toast';
+import { submitContact } from '../lib/api';
 
 // --- CATEGORY ICONS ---
 const CategoryIcons = {
@@ -154,10 +157,37 @@ const containerVariants = {
 };
 
 export default function Forge({ showTitle = true }) {
-  const handleContactSubmit = (e) => {
+  const toast = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    service: '',
+    message: ''
+  });
+
+  const handleContactChange = (e) => {
+    setContactForm({ ...contactForm, [e.target.name]: e.target.value });
+  };
+
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
-    alert('Thank you for your interest! We will be in touch shortly.');
-    e.target.reset();
+
+    if (!contactForm.name || !contactForm.email || !contactForm.message) {
+      toast.error('Missing Fields', 'Please fill in all required fields.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    const result = await submitContact(contactForm);
+    setIsSubmitting(false);
+
+    if (result.success) {
+      toast.success('Message Sent!', 'We will get back to you within 24 hours.');
+      setContactForm({ name: '', email: '', service: '', message: '' });
+    } else {
+      toast.error('Failed to Send', result.error || 'Please try again later.');
+    }
   };
 
   // Flatten all services for the contact form select
@@ -358,18 +388,29 @@ export default function Forge({ showTitle = true }) {
             <div className="blueprint-fields">
               <input
                 type="text"
+                name="name"
+                value={contactForm.name}
+                onChange={handleContactChange}
                 placeholder="Your Name"
                 required
                 className="blueprint-input"
               />
               <input
                 type="email"
+                name="email"
+                value={contactForm.email}
+                onChange={handleContactChange}
                 placeholder="Your Email"
                 required
                 className="blueprint-input"
               />
-              <select className="blueprint-select" defaultValue="">
-                <option value="" disabled>Select Service</option>
+              <select
+                name="service"
+                value={contactForm.service}
+                onChange={handleContactChange}
+                className="blueprint-select"
+              >
+                <option value="">Select Service</option>
                 {allServices.map(s => (
                   <option key={s.id} value={s.id}>{s.title}</option>
                 ))}
@@ -383,6 +424,9 @@ export default function Forge({ showTitle = true }) {
                 {/* Textarea Area */}
                 <div className="blueprint-chat-input">
                   <textarea
+                    name="message"
+                    value={contactForm.message}
+                    onChange={handleContactChange}
                     placeholder="Tell us about your project... What are you building?"
                     required
                     className="blueprint-textarea"
