@@ -1,23 +1,26 @@
 import { supabase } from './supabase';
 
 /**
- * Submit a student or client application
- * @param {Object} data - Form data
- * @param {'student' | 'client'} type - Application type
+ * Submit a student application
+ * @param {Object} formData - Student form data
  * @returns {Promise<{success: boolean, error?: string, data?: Object}>}
  */
-export async function submitApplication(formData, type) {
+export async function submitStudentApplication(formData) {
     try {
         const { data, error } = await supabase
-            .from('applications')
-            .insert([
-                {
-                    type,
-                    form_data: formData,
-                    status: 'pending',
-                    created_at: new Date().toISOString(),
-                }
-            ])
+            .from('student_applications')
+            .insert([{
+                name: formData.name,
+                email: formData.email,
+                university: formData.university || '',
+                linkedin: formData.linkedin || '',
+                github: formData.github || '',
+                skills: formData.skills || '',
+                interests: formData.interests || '',
+                source: formData.source || '',
+                reason: formData.reason || '',
+                impact: formData.impact || '',
+            }])
             .select()
             .single();
 
@@ -25,7 +28,39 @@ export async function submitApplication(formData, type) {
 
         return { success: true, data };
     } catch (error) {
-        console.error('Error submitting application:', error);
+        console.error('Error submitting student application:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Submit a client brief
+ * @param {Object} formData - Client form data
+ * @returns {Promise<{success: boolean, error?: string, data?: Object}>}
+ */
+export async function submitClientBrief(formData) {
+    try {
+        const { data, error } = await supabase
+            .from('client_briefs')
+            .insert([{
+                name: formData.name,
+                company: formData.company || '',
+                email: formData.email,
+                phone: formData.phone || '',
+                project_type: formData.projectType || '',
+                description: formData.description || '',
+                budget: formData.budget || '',
+                timeline: formData.timeline || '',
+                tech_stack: formData.techStack || '',
+            }])
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        return { success: true, data };
+    } catch (error) {
+        console.error('Error submitting client brief:', error);
         return { success: false, error: error.message };
     }
 }
@@ -157,29 +192,47 @@ export async function deleteProject(id) {
 // ============================================
 
 /**
- * Get all applications with optional filters
- * @param {Object} filters - Optional filters (type, status)
+ * Get all applications (merges student_applications + client_briefs)
+ * @param {Object} filters - Optional filters (type)
  * @returns {Promise<{success: boolean, error?: string, data?: Array}>}
  */
 export async function getApplications(filters = {}) {
     try {
-        let query = supabase
-            .from('applications')
-            .select('*')
-            .order('created_at', { ascending: false });
+        let students = [];
+        let clients = [];
 
-        if (filters.type) {
-            query = query.eq('type', filters.type);
+        // Fetch student applications unless filtering to clients only
+        if (!filters.type || filters.type === 'student') {
+            const { data, error } = await supabase
+                .from('student_applications')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            students = (data || []).map(row => ({
+                ...row,
+                type: 'student',
+            }));
         }
-        if (filters.status) {
-            query = query.eq('status', filters.status);
+
+        // Fetch client briefs unless filtering to students only
+        if (!filters.type || filters.type === 'client') {
+            const { data, error } = await supabase
+                .from('client_briefs')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            clients = (data || []).map(row => ({
+                ...row,
+                type: 'client',
+            }));
         }
 
-        const { data, error } = await query;
+        // Merge and sort by created_at descending
+        const merged = [...students, ...clients].sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
 
-        if (error) throw error;
-
-        return { success: true, data };
+        return { success: true, data: merged };
     } catch (error) {
         console.error('Error fetching applications:', error);
         return { success: false, error: error.message };
@@ -187,25 +240,11 @@ export async function getApplications(filters = {}) {
 }
 
 /**
- * Update application status
- * @param {string} id - Application ID
- * @param {string} status - New status
- * @returns {Promise<{success: boolean, error?: string}>}
+ * Update application status (no-op — tables don't have status columns yet)
  */
 export async function updateApplicationStatus(id, status) {
-    try {
-        const { error } = await supabase
-            .from('applications')
-            .update({ status, updated_at: new Date().toISOString() })
-            .eq('id', id);
-
-        if (error) throw error;
-
-        return { success: true };
-    } catch (error) {
-        console.error('Error updating application:', error);
-        return { success: false, error: error.message };
-    }
+    console.warn('updateApplicationStatus: status columns not yet added to DB');
+    return { success: false, error: 'Status tracking not yet available' };
 }
 
 /**
@@ -255,26 +294,32 @@ export async function markContactAsRead(id) {
  */
 export async function getDashboardStats() {
     try {
-        // Get application counts
-        const { data: applications, error: appError } = await supabase
-            .from('applications')
-            .select('type, status');
+        // Get student application count
+        const { data: students, error: studentError } = await supabase
+            .from('student_applications')
+            .select('id');
+        if (studentError) throw studentError;
 
-        if (appError) throw appError;
+        // Get client brief count
+        const { data: clients, error: clientError } = await supabase
+            .from('client_briefs')
+            .select('id');
+        if (clientError) throw clientError;
 
         // Get contact counts
         const { data: contacts, error: contactError } = await supabase
             .from('contacts')
             .select('is_read');
-
         if (contactError) throw contactError;
 
-        // Calculate stats
+        const studentCount = students?.length || 0;
+        const clientCount = clients?.length || 0;
+
         const stats = {
-            totalApplications: applications?.length || 0,
-            studentApplications: applications?.filter(a => a.type === 'student').length || 0,
-            clientApplications: applications?.filter(a => a.type === 'client').length || 0,
-            pendingApplications: applications?.filter(a => a.status === 'pending').length || 0,
+            totalApplications: studentCount + clientCount,
+            studentApplications: studentCount,
+            clientApplications: clientCount,
+            pendingApplications: studentCount + clientCount, // all are "pending" since no status column
             totalContacts: contacts?.length || 0,
             unreadContacts: contacts?.filter(c => !c.is_read).length || 0,
         };
@@ -287,25 +332,11 @@ export async function getDashboardStats() {
 }
 
 /**
- * Update admin notes for an application
- * @param {string} id - Application ID
- * @param {string} notes - Admin notes
- * @returns {Promise<{success: boolean, error?: string}>}
+ * Update admin notes (no-op — tables don't have admin_notes columns yet)
  */
 export async function updateApplicationNotes(id, notes) {
-    try {
-        const { error } = await supabase
-            .from('applications')
-            .update({ admin_notes: notes, updated_at: new Date().toISOString() })
-            .eq('id', id);
-
-        if (error) throw error;
-
-        return { success: true };
-    } catch (error) {
-        console.error('Error updating application notes:', error);
-        return { success: false, error: error.message };
-    }
+    console.warn('updateApplicationNotes: admin_notes columns not yet added to DB');
+    return { success: false, error: 'Notes tracking not yet available' };
 }
 
 /**

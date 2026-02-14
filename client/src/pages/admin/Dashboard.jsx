@@ -102,8 +102,8 @@ export default function Dashboard() {
             label: 'Applicant',
             width: '2fr',
             render: (row) => {
-                const name = row.form_data?.name || 'Unknown';
-                const email = row.form_data?.email || '';
+                const name = row.name || 'Unknown';
+                const email = row.email || '';
                 return (
                     <div>
                         <p className="text-white font-medium">{name}</p>
@@ -125,10 +125,14 @@ export default function Dashboard() {
             )
         },
         {
-            key: 'status',
-            label: 'Status',
-            width: '1fr',
-            render: (row) => <StatusBadge status={row.status} />
+            key: 'detail',
+            label: 'Detail',
+            width: '1.5fr',
+            render: (row) => (
+                <span className="text-white/50 text-sm truncate">
+                    {row.type === 'student' ? (row.university || 'No university') : (row.company || 'No company')}
+                </span>
+            )
         },
         {
             key: 'created_at',
@@ -195,8 +199,6 @@ export default function Dashboard() {
                         columns={applicationColumns}
                         loading={loading}
                         onRowClick={setSelectedItem}
-                        filter={filter}
-                        setFilter={setFilter}
                         viewType={activeView}
                     />
                 );
@@ -331,10 +333,10 @@ function OverviewView({ stats, loading, onViewChange, recentApplications, recent
                             recentApplications.map((app) => (
                                 <div key={app.id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                                     <div>
-                                        <p className="text-white text-sm">{app.form_data?.name || 'Unknown'}</p>
+                                        <p className="text-white text-sm">{app.name || 'Unknown'}</p>
                                         <p className="text-white/40 text-xs">{app.type === 'student' ? 'Student' : 'Client'}</p>
                                     </div>
-                                    <StatusBadge status={app.status} />
+                                    <span className="text-xs text-white/30">{new Date(app.created_at).toLocaleDateString()}</span>
                                 </div>
                             ))
                         ) : (
@@ -380,28 +382,24 @@ function OverviewView({ stats, loading, onViewChange, recentApplications, recent
 }
 
 // ===== APPLICATIONS VIEW =====
-function ApplicationsView({ applications, columns, loading, onRowClick, filter, setFilter, viewType }) {
+function ApplicationsView({ applications, columns, loading, onRowClick, viewType }) {
     const title = viewType === 'students' ? 'Student Applications' :
         viewType === 'clients' ? 'Client Briefs' : 'All Applications';
 
     const handleExport = () => {
         const exportData = applications.map(app => ({
-            name: app.form_data?.name || '',
-            email: app.form_data?.email || '',
+            name: app.name || '',
+            email: app.email || '',
             type: app.type,
-            status: app.status,
             created_at: new Date(app.created_at).toLocaleDateString(),
-            admin_notes: app.admin_notes || '',
-            form_data: app.form_data
+            detail: app.type === 'student' ? (app.university || '') : (app.company || ''),
         }));
         exportToCSV(exportData, `${viewType}_applications`, {
             name: 'Name',
             email: 'Email',
             type: 'Type',
-            status: 'Status',
             created_at: 'Submitted',
-            admin_notes: 'Notes',
-            form_data: 'Full Data'
+            detail: 'Detail',
         });
     };
 
@@ -424,17 +422,6 @@ function ApplicationsView({ applications, columns, loading, onRowClick, filter, 
                         <Download className="w-4 h-4" />
                         Export CSV
                     </button>
-                    <select
-                        value={filter.status || ''}
-                        onChange={(e) => setFilter({ ...filter, status: e.target.value || null })}
-                        className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white"
-                    >
-                        <option value="">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="reviewed">Reviewed</option>
-                        <option value="accepted">Accepted</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
                 </div>
             </div>
 
@@ -501,24 +488,7 @@ function ContactsView({ contacts, columns, loading, onRowClick }) {
 
 // ===== DETAIL PANEL (Slide-out) =====
 function DetailPanel({ item, onClose, onStatusUpdate, type, onNotesUpdate }) {
-    const toast = useToast();
     const isApplication = type === 'application';
-    const formData = item.form_data || item;
-    const [notes, setNotes] = useState(item.admin_notes || '');
-    const [savingNotes, setSavingNotes] = useState(false);
-
-    const handleSaveNotes = async () => {
-        setSavingNotes(true);
-        const result = await updateApplicationNotes(item.id, notes);
-        setSavingNotes(false);
-
-        if (result.success) {
-            toast.success('Notes Saved', 'Admin notes have been updated');
-            if (onNotesUpdate) onNotesUpdate(item.id, notes);
-        } else {
-            toast.error('Failed to Save', result.error);
-        }
-    };
 
     return (
         <motion.div
@@ -543,8 +513,8 @@ function DetailPanel({ item, onClose, onStatusUpdate, type, onNotesUpdate }) {
                 {/* Header */}
                 <div className="sticky top-0 bg-[#0a0a0a] border-b border-white/10 p-6 flex items-center justify-between">
                     <div>
-                        <h2 className="text-xl font-bold text-white">{formData.name || 'Details'}</h2>
-                        <p className="text-white/40 text-sm">{formData.email}</p>
+                        <h2 className="text-xl font-bold text-white">{item.name || 'Details'}</h2>
+                        <p className="text-white/40 text-sm">{item.email}</p>
                     </div>
                     <button
                         onClick={onClose}
@@ -558,25 +528,6 @@ function DetailPanel({ item, onClose, onStatusUpdate, type, onNotesUpdate }) {
                 <div className="p-6 space-y-6">
                     {isApplication ? (
                         <>
-                            {/* Status */}
-                            <div>
-                                <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-2 block">Status</label>
-                                <div className="flex gap-2 flex-wrap">
-                                    {['pending', 'reviewed', 'accepted', 'rejected'].map((status) => (
-                                        <button
-                                            key={status}
-                                            onClick={() => onStatusUpdate(item.id, status)}
-                                            className={`px-3 py-1.5 rounded-lg text-sm capitalize transition-all ${item.status === status
-                                                ? 'bg-orange-500 text-white'
-                                                : 'bg-white/5 text-white/50 hover:bg-white/10'
-                                                }`}
-                                        >
-                                            {status}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
                             {/* Type */}
                             <div>
                                 <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-2 block">Type</label>
@@ -587,39 +538,122 @@ function DetailPanel({ item, onClose, onStatusUpdate, type, onNotesUpdate }) {
                                 </span>
                             </div>
 
-                            {/* Admin Notes */}
+                            {/* Student-specific fields */}
+                            {item.type === 'student' && (
+                                <>
+                                    {item.university && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">University</label>
+                                            <p className="text-white/80 text-sm">{item.university}</p>
+                                        </div>
+                                    )}
+                                    {item.linkedin && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">LinkedIn</label>
+                                            <a href={item.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-400 text-sm hover:underline">{item.linkedin}</a>
+                                        </div>
+                                    )}
+                                    {item.github && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">GitHub</label>
+                                            <a href={item.github} target="_blank" rel="noopener noreferrer" className="text-blue-400 text-sm hover:underline">{item.github}</a>
+                                        </div>
+                                    )}
+                                    {item.skills && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Skills</label>
+                                            <p className="text-white/80 text-sm">{item.skills}</p>
+                                        </div>
+                                    )}
+                                    {item.interests && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Interests</label>
+                                            <p className="text-white/80 text-sm">{item.interests}</p>
+                                        </div>
+                                    )}
+                                    {item.source && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">How They Found Us</label>
+                                            <p className="text-white/80 text-sm">{item.source}</p>
+                                        </div>
+                                    )}
+                                    {item.reason && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Reason for Joining</label>
+                                            <p className="text-white/80 text-sm whitespace-pre-wrap">{item.reason}</p>
+                                        </div>
+                                    )}
+                                    {item.impact && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Expected Impact</label>
+                                            <p className="text-white/80 text-sm whitespace-pre-wrap">{item.impact}</p>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+
+                            {/* Client-specific fields */}
+                            {item.type === 'client' && (
+                                <>
+                                    {item.company && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Company</label>
+                                            <p className="text-white/80 text-sm">{item.company}</p>
+                                        </div>
+                                    )}
+                                    {item.phone && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Phone</label>
+                                            <p className="text-white/80 text-sm">{item.phone}</p>
+                                        </div>
+                                    )}
+                                    {item.project_type && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Project Type</label>
+                                            <p className="text-white/80 text-sm">{item.project_type}</p>
+                                        </div>
+                                    )}
+                                    {item.description && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Description</label>
+                                            <p className="text-white/80 text-sm whitespace-pre-wrap">{item.description}</p>
+                                        </div>
+                                    )}
+                                    {item.budget && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Budget</label>
+                                            <p className="text-white/80 text-sm">{item.budget}</p>
+                                        </div>
+                                    )}
+                                    {item.timeline && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Timeline</label>
+                                            <p className="text-white/80 text-sm">{item.timeline}</p>
+                                        </div>
+                                    )}
+                                    {item.tech_stack && (
+                                        <div>
+                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Tech Stack</label>
+                                            <p className="text-white/80 text-sm">{item.tech_stack}</p>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+
+                            {/* Submitted date */}
                             <div>
-                                <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-2 block">Admin Notes</label>
-                                <textarea
-                                    value={notes}
-                                    onChange={(e) => setNotes(e.target.value)}
-                                    placeholder="Add internal notes about this application..."
-                                    className="w-full h-24 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/80 text-sm placeholder-white/30 focus:outline-none focus:border-orange-500/50 resize-none"
-                                />
-                                <button
-                                    onClick={handleSaveNotes}
-                                    disabled={savingNotes || notes === (item.admin_notes || '')}
-                                    className="mt-2 flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {savingNotes ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                                    Save Notes
-                                </button>
+                                <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">Submitted</label>
+                                <p className="text-white/60 text-sm">{new Date(item.created_at).toLocaleString()}</p>
                             </div>
 
-                            {/* Form Data */}
-                            <div className="space-y-4">
-                                {Object.entries(formData).map(([key, value]) => {
-                                    if (!value || key === 'name' || key === 'email') return null;
-                                    return (
-                                        <div key={key}>
-                                            <label className="text-xs font-mono uppercase tracking-widest text-white/40 mb-1 block">
-                                                {key.replace(/_/g, ' ')}
-                                            </label>
-                                            <p className="text-white/80 text-sm">{value}</p>
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                            {/* Reply via Email */}
+                            <a
+                                href={`mailto:${item.email}`}
+                                className="flex items-center gap-2 px-4 py-3 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition-colors"
+                            >
+                                <Mail className="w-4 h-4" />
+                                Reply via Email
+                            </a>
                         </>
                     ) : (
                         <>

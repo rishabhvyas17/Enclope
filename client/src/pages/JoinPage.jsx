@@ -10,7 +10,7 @@ import {
 import Footer from '../components/Footer';
 import { supabase } from '../lib/supabase';
 import { useToast } from '../components/ui/Toast';
-import { submitApplication } from '../lib/api';
+import { submitStudentApplication, submitClientBrief } from '../lib/api';
 
 export default function JoinUs() {
   const [selectedRole, setSelectedRole] = useState(null); // 'student' | 'client' | null
@@ -270,7 +270,7 @@ function StudentApplication({ onBack }) {
     }
 
     setIsSubmitting(true);
-    const result = await submitApplication(formData, 'student');
+    const result = await submitStudentApplication(formData);
     setIsSubmitting(false);
 
     if (result.success) {
@@ -486,7 +486,7 @@ function ClientApplication({ onBack }) {
     }
 
     setIsSubmitting(true);
-    const result = await submitApplication(formData, 'client');
+    const result = await submitClientBrief(formData);
     setIsSubmitting(false);
 
     if (result.success) {
@@ -531,8 +531,8 @@ function ClientApplication({ onBack }) {
     <div
       onClick={() => onClick(value)}
       className={`cursor-pointer p-4 rounded-xl border transition-all duration-200 flex items-center gap-3 ${selected === value
-          ? 'bg-blue-600/20 border-blue-500 text-white'
-          : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:border-white/30'
+        ? 'bg-blue-600/20 border-blue-500 text-white'
+        : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:border-white/30'
         }`}
     >
       <Icon size={20} className={selected === value ? 'text-blue-400' : 'text-white/40'} />
