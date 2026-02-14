@@ -86,7 +86,7 @@ export default function Footer() {
                         { name: 'Home', href: '/' },
                         { name: 'Showroom', href: '/showroom' },
                         { name: 'About Us', href: '/about' },
-                        { name: 'Apply', href: '/join' }
+                        { name: 'Apply', href: '/apply' }
                      ].map((item) => (
                         <li key={item.name}>
                            <Link to={item.href} className="text-white/70 hover:text-accent transition-colors text-sm block">
