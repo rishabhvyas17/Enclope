@@ -13,6 +13,7 @@
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@studio-freight/lenis": "^1.0.42",
+    "@supabase/supabase-js": "^2.95.3",
     "framer-motion": "^12.23.21",
     "lucide-react": "^0.562.0",
     "react": "^19.1.1",
